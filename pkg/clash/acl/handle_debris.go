@@ -6,10 +6,11 @@ import (
 	"strings"
 )
 
-var reg = regexp.MustCompile(`(?m)^[^#\s]+`)
+var itemReg = regexp.MustCompile(`(?m)([\w-]+,[\w./:-]*[^\x00-\xff]*)(,no-resolve)?`)
+var comReg = regexp.MustCompile(`(?m)#.+`)
 
 func AddProxyGroup(debris, groupName string) string {
-	return reg.ReplaceAllString(debris, fmt.Sprintf("- $0,%s", groupName))
+	return comReg.ReplaceAllString(itemReg.ReplaceAllString(debris, fmt.Sprintf("  - $1,%s$2", groupName)), "  $0")
 }
 
 func MergeRule(debris ...string) string {

@@ -1,0 +1,156 @@
+# HTTP 端口
+port: 7890
+
+# SOCKS5 端口
+socks-port: 7891
+
+# Linux 及 macOS 的 redir 端口
+# redir-port: 7892
+
+allow-lan: false
+
+# Only applicable when setting allow-lan to true
+# "*": bind all IP addresses
+# 192.168.122.11: bind a single IPv4 address
+# "[aaaa::a8aa:ff:fe09:57d8]": bind a single IPv6 address
+# bind-address: "*"
+
+# Rule / Global/ Direct (默认为 Rule 模式)
+mode: Rule
+
+# 设置日志等级 (默认为 info)
+# info / warning / error / debug / silent
+log-level: info
+
+# RESTful API for clash
+external-controller: 127.0.0.1:9090
+
+# you can put the static web resource (such as clash-dashboard) to a directory, and clash would serve in `${API}/ui`
+# input is a relative path to the configuration directory or an absolute path
+# external-ui: folder
+
+# RESTful API 的口令 (可选)
+# secret: ""
+
+# experimental feature
+experimental:
+  ignore-resolve-fail: true # ignore dns resolve fail, default value is true
+
+# authentication of local SOCKS5/HTTP(S) server
+# authentication:
+#  - "user1:pass1"
+#  - "user2:pass2"
+
+# # experimental hosts, support wildcard (e.g. *.clash.dev Even *.foo.*.example.com)
+# # static domain has a higher priority than wildcard domain (foo.example.com > *.example.com)
+# hosts:
+#   '*.clash.dev': 127.0.0.1
+#   'alpha.clash.dev': '::1'
+
+# DNS 设置
+# dns:
+#   enable: true
+#   listen: 0.0.0.0:53
+#   enhanced-mode: fake-ip
+#   nameserver:
+#    - 119.29.29.29
+#    - 223.5.5.5
+
+# Clash for Windows
+cfw-bypass:
+  - qq.com
+  - music.163.com
+  - '*.music.126.net'
+  - localhost
+  - 127.*
+  - 10.*
+  - 172.16.*
+  - 172.17.*
+  - 172.18.*
+  - 172.19.*
+  - 172.20.*
+  - 172.21.*
+  - 172.22.*
+  - 172.23.*
+  - 172.24.*
+  - 172.25.*
+  - 172.26.*
+  - 172.27.*
+  - 172.28.*
+  - 172.29.*
+  - 172.30.*
+  - 172.31.*
+  - 192.168.*
+  - <local>
+cfw-latency-timeout: 5000
+
+# 代理节点
+Proxy: ~
+
+# 代理组策略
+Proxy Group:
+  - name: 节点选择
+    type: select
+    proxies:
+      - ✈ 手动选择
+      - ✈ 延迟最低
+      - ✈ 故障切换
+      - DIRECT
+      - "1"
+  - name: 国外媒体
+    type: select
+    proxies:
+      - 节点选择
+      - ✈ 手动选择
+      - ✈ 延迟最低
+      - ✈ 故障切换
+      - DIRECT
+  - name: 国内媒体
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - ✈ 手动选择
+      - ✈ 延迟最低
+  - name: 广告拦截
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+  - name: final
+    type: select
+    proxies:
+      - 节点选择
+      - ✈ 手动选择
+      - ✈ 延迟最低
+      - ✈ 故障切换
+      - DIRECT
+  - name: ✈ 手动选择
+    type: select
+    proxies:
+      - "1"
+  - url: http://www.gstatic.com/generate_204
+    interval: 500
+    name: ✈ 延迟最低
+    type: url-test
+    proxies:
+      - "1"
+  - url: http://www.gstatic.com/generate_204
+    interval: 500
+    name: ✈ 故障切换
+    type: fallback
+    proxies:
+      - "1"
+
+# 规则
+Rule:
+%s
+
+  # GeoIP China
+  - GEOIP,CN,DIRECT
+
+  # 自定义
+  - DOMAIN-KEYWORD,dev,DIRECT
+  - DOMAIN,account.jetbrains.com,广告拦截
+
+  - MATCH,final

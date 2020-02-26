@@ -28,13 +28,22 @@ var cn = map[string]string{
 	"ProxyLite":        "https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ProxyLite.list",
 }
 
-func GetUrls(origin string) map[string]string {
+func GetUrls(origin string, ProxyLite bool) map[string]string {
+	var list map[string]string
 	switch origin {
 	case "cn":
-		return cn
+		list = cn
 	case "github":
 		fallthrough
 	default:
-		return github
+		list = github
 	}
+
+	if ProxyLite {
+		delete(list, "ProxyGFWlist")
+	} else {
+		delete(list, "ProxyLite")
+	}
+
+	return list
 }
