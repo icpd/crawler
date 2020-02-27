@@ -1,0 +1,251 @@
+package subscribe
+
+import (
+	"bufio"
+	"encoding/json"
+	"log"
+	"net/url"
+	"strings"
+
+	"github.com/whoisix/subscribe2clash/utils/mybase64"
+)
+
+func ParseProxy(contentSlice []string) []interface{} {
+	var proxies []interface{}
+	for _, v := range contentSlice {
+		// ssd
+		if strings.Contains(v, "airport") {
+			ssSlice := ssdConf(v)
+			for _, ss := range ssSlice {
+				proxies = append(proxies, ss)
+			}
+			continue
+		}
+
+		scanner := bufio.NewScanner(strings.NewReader(v))
+		for scanner.Scan() {
+			switch {
+			case strings.HasPrefix(scanner.Text(), "ssr://"):
+				s := scanner.Text()[6:]
+				s = strings.TrimSpace(s)
+				ssr := ssrConf(s)
+				if ssr.Name != "" {
+					proxies = append(proxies, ssr)
+				}
+			case strings.HasPrefix(scanner.Text(), "vmess://"):
+				s := scanner.Text()[8:]
+				s = strings.TrimSpace(s)
+				clashVmess := v2rConf(s)
+				if clashVmess.Name != "" {
+					proxies = append(proxies, clashVmess)
+				}
+			case strings.HasPrefix(scanner.Text(), "ss://"):
+				s := scanner.Text()[5:]
+				s = strings.TrimSpace(s)
+				ss := ssConf(s)
+				if ss.Name != "" {
+					proxies = append(proxies, ss)
+				}
+			}
+		}
+	}
+
+	return proxies
+}
+
+func v2rConf(s string) ClashVmess {
+	vmconfig, err := mybase64.Base64DecodeStripped(s)
+	if err != nil {
+		return ClashVmess{}
+	}
+	vmess := Vmess{}
+	err = json.Unmarshal(vmconfig, &vmess)
+	if err != nil {
+		log.Println(err)
+		return ClashVmess{}
+	}
+	clashVmess := ClashVmess{}
+	clashVmess.Name = vmess.PS
+
+	clashVmess.Type = "vmess"
+	clashVmess.Server = vmess.Add
+	switch vmess.Port.(type) {
+	case string:
+		clashVmess.Port, _ = vmess.Port.(string)
+	case int:
+		clashVmess.Port, _ = vmess.Port.(int)
+	case float64:
+		clashVmess.Port, _ = vmess.Port.(float64)
+	default:
+
+	}
+	clashVmess.UUID = vmess.ID
+	clashVmess.AlterID = vmess.Aid
+	clashVmess.Cipher = vmess.Type
+	if "" != vmess.TLS {
+		clashVmess.TLS = true
+	} else {
+		clashVmess.TLS = false
+	}
+	if "ws" == vmess.Net {
+		clashVmess.Network = vmess.Net
+		clashVmess.WSPATH = vmess.Path
+	}
+
+	return clashVmess
+}
+
+func ssdConf(ssdJson string) []ClashSS {
+	var ssd SSD
+	err := json.Unmarshal([]byte(ssdJson), &ssd)
+	if err != nil {
+		log.Println("ssd json unmarshal err:", err)
+		return nil
+	}
+
+	var clashSSSlice []ClashSS
+	for _, server := range ssd.Servers {
+		options, err := url.ParseQuery(server.PluginOptions)
+		if err != nil {
+			continue
+		}
+
+		var ss ClashSS
+		ss.Type = "ss"
+		ss.Name = server.Remarks
+		ss.Cipher = server.Encryption
+		ss.Password = server.Password
+		ss.Server = server.Server
+		ss.Port = server.Port
+		ss.Plugin = server.Plugin
+		ss.PluginOpts = PluginOpts{
+			Mode: options["obfs"][0],
+			Host: options["obfs-host"][0],
+		}
+
+		switch {
+		case strings.Contains(ss.Plugin, "obfs"):
+			ss.Plugin = "obfs"
+		}
+
+		clashSSSlice = append(clashSSSlice, ss)
+	}
+
+	return clashSSSlice
+}
+
+func ssrConf(s string) ClashRSSR {
+	rawSSRConfig, err := mybase64.Base64DecodeStripped(s)
+	if err != nil {
+		return ClashRSSR{}
+	}
+	params := strings.Split(string(rawSSRConfig), `:`)
+	if 6 != len(params) {
+		return ClashRSSR{}
+	}
+	ssr := ClashRSSR{}
+	ssr.Type = "ssr"
+	ssr.Server = params[SSRServer]
+	ssr.Port = params[SSRPort]
+	ssr.Protocol = params[SSRProtocol]
+	ssr.Cipher = params[SSRCipher]
+	ssr.OBFS = params[SSROBFS]
+
+	// 如果兼容ss协议，就转换为clash的ss配置
+	// https://github.com/Dreamacro/clash
+	if "origin" == ssr.Protocol && "plain" == ssr.OBFS {
+		switch ssr.Cipher {
+		case "aes-128-gcm", "aes-192-gcm", "aes-256-gcm",
+			"aes-128-cfb", "aes-192-cfb", "aes-256-cfb",
+			"aes-128-ctr", "aes-192-ctr", "aes-256-ctr",
+			"rc4-md5", "chacha20", "chacha20-ietf", "xchacha20",
+			"chacha20-ietf-poly1305", "xchacha20-ietf-poly1305":
+			ssr.Type = "ss"
+		}
+	}
+	suffix := strings.Split(params[SSRSuffix], "/?")
+	if 2 != len(suffix) {
+		return ClashRSSR{}
+	}
+	passwordBase64 := suffix[0]
+	password, err := mybase64.Base64DecodeStripped(passwordBase64)
+	if err != nil {
+		return ClashRSSR{}
+	}
+	ssr.Password = string(password)
+
+	m, err := url.ParseQuery(suffix[1])
+	if err != nil {
+		return ClashRSSR{}
+	}
+
+	for k, v := range m {
+		de, err := mybase64.Base64DecodeStripped(v[0])
+		if err != nil {
+			return ClashRSSR{}
+		}
+		switch k {
+		case "obfsparam":
+			ssr.OBFSParam = string(de)
+			continue
+		case "protoparam":
+			ssr.ProtocolParam = string(de)
+			continue
+		case "remarks":
+			ssr.Name = string(de)
+			continue
+		case "group":
+			continue
+		}
+	}
+
+	return ssr
+}
+
+func ssConf(s string) ClashSS {
+	sp := strings.Split(s, "@")
+	rawSSRConfig, err := mybase64.Base64DecodeStripped(sp[0])
+	if err != nil {
+		return ClashSS{}
+	}
+	params := strings.Split(string(rawSSRConfig), `:`)
+	if 2 != len(params) {
+		return ClashSS{}
+	}
+
+	ss := ClashSS{}
+	ss.Type = "ss"
+	ss.Cipher = params[0]
+	ss.Password = params[1]
+	unescape, err := url.PathUnescape(sp[1])
+
+	chunk1 := strings.Split(unescape, "?")
+	add := strings.Split(chunk1[0], ":")
+	ss.Server = add[0]
+	ss.Port = add[1]
+
+	chunk2 := strings.Split(chunk1[1], ";")
+	ss.Plugin = strings.Split(chunk2[0], "=")[1]
+	switch {
+	case strings.Contains(ss.Plugin, "obfs"):
+		ss.Plugin = "obfs"
+	}
+
+	chunk3 := strings.Split(chunk2[1], "#")
+	if len(chunk3) < 2 {
+		return ClashSS{}
+	}
+
+	chunk4 := strings.Split(chunk3[0], ";")
+	p := PluginOpts{
+		Mode: strings.Split(chunk4[0], "=")[1],
+	}
+	if len(chunk4) > 1 {
+		p.Host = strings.Split(chunk4[1], "=")[1]
+	}
+
+	ss.Name = chunk3[1]
+	ss.PluginOpts = p
+
+	return ss
+}

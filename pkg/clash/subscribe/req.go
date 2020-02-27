@@ -1,0 +1,39 @@
+package subscribe
+
+import (
+	"encoding/base64"
+	"log"
+	"strings"
+
+	"github.com/whoisix/subscribe2clash/utils/mybase64"
+	"github.com/whoisix/subscribe2clash/utils/req"
+)
+
+func GetSubContent(query string) ([]string, error) {
+	subLinks := strings.Split(query, ",")
+
+	var contentSlice []string
+	for _, link := range subLinks {
+		content, err := req.HttpGet(link)
+		if err != nil {
+			return nil, err
+		}
+
+		if strings.HasPrefix(content, "ssd://") {
+			content = content[6:]
+			decodeBody, err := base64.StdEncoding.WithPadding(base64.NoPadding).DecodeString(content)
+			if err != nil {
+				log.Println("ssd decode err:", err)
+				continue
+			}
+
+			contentSlice = append(contentSlice, string(decodeBody))
+			continue
+		}
+
+		decoded, err := mybase64.Base64DecodeStripped(content)
+		contentSlice = append(contentSlice, string(decoded))
+	}
+
+	return contentSlice, nil
+}
