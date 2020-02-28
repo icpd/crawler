@@ -5,10 +5,13 @@ import (
 	"encoding/json"
 	"log"
 	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/whoisix/subscribe2clash/utils/mybase64"
 )
+
+var ssReg = regexp.MustCompile(`(?m)ss://(\w+)@([^:]+):(\d+)\?plugin=([^;]+);\w+=(\w+)(?:;obfs-host=)?([^#]+)?#(.+)`)
 
 func ParseProxy(contentSlice []string) []interface{} {
 	var proxies []interface{}
@@ -40,8 +43,7 @@ func ParseProxy(contentSlice []string) []interface{} {
 					proxies = append(proxies, clashVmess)
 				}
 			case strings.HasPrefix(scanner.Text(), "ss://"):
-				s := scanner.Text()[5:]
-				s = strings.TrimSpace(s)
+				s := strings.TrimSpace(scanner.Text())
 				ss := ssConf(s)
 				if ss.Name != "" {
 					proxies = append(proxies, ss)
@@ -203,8 +205,16 @@ func ssrConf(s string) ClashRSSR {
 }
 
 func ssConf(s string) ClashSS {
-	sp := strings.Split(s, "@")
-	rawSSRConfig, err := mybase64.Base64DecodeStripped(sp[0])
+	s, err := url.PathUnescape(s)
+	if err != nil {
+		return ClashSS{}
+	}
+
+	findStr := ssReg.FindStringSubmatch(s)
+	if len(findStr) < 6 {
+		return ClashSS{}
+	}
+	rawSSRConfig, err := mybase64.Base64DecodeStripped(findStr[1])
 	if err != nil {
 		return ClashSS{}
 	}
@@ -217,34 +227,21 @@ func ssConf(s string) ClashSS {
 	ss.Type = "ss"
 	ss.Cipher = params[0]
 	ss.Password = params[1]
-	unescape, err := url.PathUnescape(sp[1])
+	ss.Server = findStr[2]
+	ss.Port = findStr[3]
 
-	chunk1 := strings.Split(unescape, "?")
-	add := strings.Split(chunk1[0], ":")
-	ss.Server = add[0]
-	ss.Port = add[1]
-
-	chunk2 := strings.Split(chunk1[1], ";")
-	ss.Plugin = strings.Split(chunk2[0], "=")[1]
+	ss.Plugin = findStr[4]
 	switch {
 	case strings.Contains(ss.Plugin, "obfs"):
 		ss.Plugin = "obfs"
 	}
 
-	chunk3 := strings.Split(chunk2[1], "#")
-	if len(chunk3) < 2 {
-		return ClashSS{}
-	}
-
-	chunk4 := strings.Split(chunk3[0], ";")
 	p := PluginOpts{
-		Mode: strings.Split(chunk4[0], "=")[1],
+		Mode: findStr[5],
 	}
-	if len(chunk4) > 1 {
-		p.Host = strings.Split(chunk4[1], "=")[1]
-	}
+	p.Host = findStr[6]
 
-	ss.Name = chunk3[1]
+	ss.Name = findStr[7]
 	ss.PluginOpts = p
 
 	return ss
