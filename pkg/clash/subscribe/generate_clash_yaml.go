@@ -10,6 +10,8 @@ import (
 	"reflect"
 )
 
+var OutputFile string
+
 func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
@@ -71,7 +73,7 @@ func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
 
 func GenerateClashConfig(proxies []interface{}) ([]byte, error) {
 	clash := Clash{}
-	r := clash.LoadTemplate("./config/clash/acl.yaml", proxies)
+	r := clash.LoadTemplate(OutputFile, proxies)
 	if r == nil {
 		return nil, fmt.Errorf("sublink 返回数据格式不对")
 	}

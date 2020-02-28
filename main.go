@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
 	"log"
 	"net/http"
 	"os"
@@ -43,26 +44,28 @@ func main() {
 		return
 	}
 
+	var options []acl.GenOption
+	if origin != "" {
+		options = append(options, acl.WithOrigin(origin))
+	}
+	if baseFile != "" {
+		options = append(options, acl.WithBaseFile(baseFile))
+	}
+	if outputFile != "" {
+		options = append(options, acl.WithOutputFile(outputFile))
+		subscribe.OutputFile = outputFile
+	}
+
 	if gc {
-		var options []acl.GenOption
-		if origin != "" {
-			options = append(options, acl.WithOrigin(origin))
-		}
-		if baseFile != "" {
-			options = append(options, acl.WithBaseFile(baseFile))
-		}
-		if outputFile != "" {
-			options = append(options, acl.WithOutputFile(outputFile))
-		}
 		acl.GenerateConfig(options...)
 		return
 	}
 
 	go func() {
-		acl.GenerateConfig()
+		acl.GenerateConfig(options...)
 		for {
-			time.After(6 * time.Hour)
-			acl.GenerateConfig()
+			<-time.After(6 * time.Hour)
+			acl.GenerateConfig(options...)
 		}
 	}()
 
