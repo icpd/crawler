@@ -11,7 +11,13 @@
 
 ## 使用
 
-### 源码安装
+### 二进制
+
+- [release](https://github.com/whoisix/subscribe2clash/releases)下载对应的版本
+- 解压后运行程序
+- 访问http://localhost:8162/?sub_link=你的订阅链接
+
+### 源码
 
 - 安装Go 1.11+
 - `go get github.com/whoisix/subscribe2clash`

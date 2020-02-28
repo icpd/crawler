@@ -1,4 +1,4 @@
-NAME=clashconfig
+NAME=subscribe2clash
 BINDIR=bin
 VERSION=0.0.1
 BUILDTIME=$(shell date -u)
