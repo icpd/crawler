@@ -92,8 +92,8 @@ Proxy Group:
   - name: 节点选择
     type: select
     proxies:
-      - ✈ 手动选择
       - ✈ 延迟最低
+      - ✈ 手动选择
       - ✈ 故障切换
       - DIRECT
       - "1"
