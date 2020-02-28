@@ -58,7 +58,13 @@ func main() {
 		return
 	}
 
-	acl.GenerateConfig()
+	go func() {
+		acl.GenerateConfig()
+		for {
+			time.After(6 * time.Hour)
+			acl.GenerateConfig()
+		}
+	}()
 
 	router := gin.New()
 	router.Use(gin.Logger())
