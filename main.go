@@ -22,6 +22,8 @@ var (
 	baseFile   string
 	outputFile string
 	origin     string
+	listenAddr string
+	listenPort string
 )
 
 func init() {
@@ -30,6 +32,8 @@ func init() {
 	flag.StringVar(&origin, "origin", "github", "acl规则获取地址。cn：国内镜像，github：github获取")
 	flag.StringVar(&baseFile, "b", "", "clash基础配置文件")
 	flag.StringVar(&outputFile, "o", "", "输出clash文件名")
+	flag.StringVar(&listenAddr, "l", "0.0.0.0", "listen address")
+	flag.StringVar(&listenPort, "p", "8162", "listen port")
 	flag.Parse()
 }
 
@@ -56,7 +60,6 @@ func main() {
 
 	acl.GenerateConfig()
 
-
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
@@ -64,7 +67,7 @@ func main() {
 	router.GET("/", api.Clash)
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("%s:%s", "", "8162"),
+		Addr:    fmt.Sprintf("%s:%s", listenAddr, listenPort),
 		Handler: router,
 	}
 
