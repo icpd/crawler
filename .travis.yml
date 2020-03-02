@@ -8,7 +8,7 @@ script:
 
 deploy:
   provider: releases
-  cleanup: true
+  skip_cleanup: true
   api_key: $GITHUB_TOKEN
   file: bin/*
   on:
