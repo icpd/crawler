@@ -8,7 +8,7 @@ script:
 deploy:
   provider: releases
   skip_cleanup: true
-  github_token: 9d8e2766ae3ff294859c7661c8d32ab003d37b12 # Set in travis-ci.org dashboard
+  github_token: ${GITHUB_TOKEN} # Set in travis-ci.org dashboard
   file: bin/*
   on:
     tags: true
