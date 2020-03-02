@@ -1,6 +1,6 @@
 NAME=subscribe2clash
 BINDIR=bin
-VERSION=0.0.1
+VERSION=$(shell git describe --tags || echo "unknown version")
 BUILDTIME=$(shell date -u)
 GOBUILD=CGO_ENABLED=0 go build -ldflags '-w -s'
 
