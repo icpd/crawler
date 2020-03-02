@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/whoisix/subscribe2clash/utils/req"
 )
@@ -47,10 +48,30 @@ func GenerateConfig(genOptions ...GenOption) {
 	}
 
 	var s []string
-	for k, url := range GetUrls(option.origin, false) {
-		resp, _ := req.HttpGet(url)
-		s = append(s, AddProxyGroup(resp, Group[k]))
+	var wg sync.WaitGroup
+	urls := GetUrls(option.origin, false)
+	urlCh := make(chan map[string]string)
+
+	workerCount := len(urls)
+	wg.Add(workerCount)
+	for i := 0; i < workerCount; i++ {
+		go func() {
+			defer wg.Done()
+			for ch := range urlCh {
+				resp, _ := req.HttpGet(ch["url"])
+				s = append(s, AddProxyGroup(resp, ch["group"]))
+			}
+		}()
 	}
+
+	for k, url := range urls {
+		urlCh <- map[string]string{
+			"url":   url,
+			"group": k,
+		}
+	}
+	close(urlCh)
+	wg.Wait()
 	r := MergeRule(s...)
 
 	fileBytes, err := ioutil.ReadFile(option.baseFile)
