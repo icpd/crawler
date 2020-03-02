@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +14,8 @@ import (
 
 	"github.com/whoisix/subscribe2clash/api"
 	"github.com/whoisix/subscribe2clash/pkg/clash/acl"
+	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
+	"github.com/whoisix/subscribe2clash/utils/req"
 )
 
 var (
@@ -35,6 +36,7 @@ func init() {
 	flag.StringVar(&outputFile, "o", "", "输出clash文件名")
 	flag.StringVar(&listenAddr, "l", "0.0.0.0", "listen address")
 	flag.StringVar(&listenPort, "p", "8162", "listen port")
+	flag.StringVar(&req.Proxy, "proxy", "", "http proxy")
 	flag.Parse()
 }
 
