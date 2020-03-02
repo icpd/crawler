@@ -59,7 +59,7 @@ func GenerateConfig(genOptions ...GenOption) {
 			defer wg.Done()
 			for ch := range urlCh {
 				resp, _ := req.HttpGet(ch["url"])
-				s = append(s, AddProxyGroup(resp, ch["group"]))
+				s = append(s, AddProxyGroup(resp, Group[ch["group"]]))
 			}
 		}()
 	}
