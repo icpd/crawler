@@ -7,6 +7,7 @@ import (
 	"os"
 	"sync"
 
+	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
 	"github.com/whoisix/subscribe2clash/utils/req"
 )
 
@@ -46,6 +47,8 @@ func GenerateConfig(genOptions ...GenOption) {
 	for _, fn := range genOptions {
 		fn(&option)
 	}
+
+	subscribe.OutputFile = option.outputFile
 
 	var s []string
 	var wg sync.WaitGroup

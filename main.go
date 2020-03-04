@@ -14,7 +14,6 @@ import (
 
 	"github.com/whoisix/subscribe2clash/api"
 	"github.com/whoisix/subscribe2clash/pkg/clash/acl"
-	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
 	"github.com/whoisix/subscribe2clash/utils/req"
 )
 
@@ -55,7 +54,6 @@ func main() {
 	}
 	if outputFile != "" {
 		options = append(options, acl.WithOutputFile(outputFile))
-		subscribe.OutputFile = outputFile
 	}
 
 	if gc {
