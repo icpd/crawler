@@ -20,7 +20,9 @@ func ParseProxy(contentSlice []string) []interface{} {
 		if strings.Contains(v, "airport") {
 			ssSlice := ssdConf(v)
 			for _, ss := range ssSlice {
-				proxies = append(proxies, ss)
+				if !filterNode(ss.Name) {
+					proxies = append(proxies, ss)
+				}
 			}
 			continue
 		}
@@ -32,20 +34,20 @@ func ParseProxy(contentSlice []string) []interface{} {
 				s := scanner.Text()[6:]
 				s = strings.TrimSpace(s)
 				ssr := ssrConf(s)
-				if ssr.Name != "" {
+				if ssr.Name != "" && !filterNode(ssr.Name) {
 					proxies = append(proxies, ssr)
 				}
 			case strings.HasPrefix(scanner.Text(), "vmess://"):
 				s := scanner.Text()[8:]
 				s = strings.TrimSpace(s)
 				clashVmess := v2rConf(s)
-				if clashVmess.Name != "" {
+				if clashVmess.Name != "" && !filterNode(clashVmess.Name) {
 					proxies = append(proxies, clashVmess)
 				}
 			case strings.HasPrefix(scanner.Text(), "ss://"):
 				s := strings.TrimSpace(scanner.Text())
 				ss := ssConf(s)
-				if ss.Name != "" {
+				if ss.Name != "" && !filterNode(ss.Name) {
 					proxies = append(proxies, ss)
 				}
 			}
@@ -245,4 +247,31 @@ func ssConf(s string) ClashSS {
 	ss.PluginOpts = p
 
 	return ss
+}
+
+func filterNode(nodeName string) bool {
+
+	if strings.Contains(nodeName, "阿里云上海中转") {
+		return true
+	}
+
+	if strings.Contains(nodeName, "微信") {
+		return true
+	}
+
+	// 过滤官网
+	if strings.Contains(nodeName, "官网") {
+		return true
+	}
+
+	// 过滤剩余流量
+	if strings.Contains(nodeName, "剩余流量") {
+		return true
+	}
+
+	if strings.Contains(nodeName, "过期时间") {
+		return true
+	}
+
+	return false
 }
