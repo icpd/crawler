@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -10,9 +11,13 @@ import (
 )
 
 func Clash(c *gin.Context) {
-	content, err := subscribe.GetSubContent(c.Query("sub_link"))
+	query := c.Request.URL.String()
+	idx := strings.Index(query, "sub_link=")
+	val := query[idx+9:]
+
+	content, err := subscribe.GetSubContent(val)
 	if err != nil {
-		c.String(http.StatusBadRequest, "sub_link=订阅链接,英文逗号分割")
+		c.String(http.StatusBadRequest, err.Error())
 		c.Abort()
 		return
 	}
