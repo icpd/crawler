@@ -77,15 +77,19 @@ func GenerateConfig(genOptions ...GenOption) {
 	wg.Wait()
 	r := MergeRule(s...)
 
-	fileBytes, err := ioutil.ReadFile(option.baseFile)
+	writeNewFile(option.baseFile, option.outputFile, r)
+}
+
+func writeNewFile(baseFile, outputFile, filler string) {
+	fileBytes, err := ioutil.ReadFile(baseFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	configStr := fmt.Sprintf(string(fileBytes), r)
+	configStr := fmt.Sprintf(string(fileBytes), filler)
 
 	file, err := os.OpenFile(
-		option.outputFile,
+		outputFile,
 		os.O_WRONLY|os.O_TRUNC|os.O_CREATE,
 		0666,
 	)
