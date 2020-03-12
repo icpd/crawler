@@ -88,6 +88,10 @@ func writeNewFile(baseFile, outputFile, filler string) {
 
 	configStr := fmt.Sprintf(string(fileBytes), filler)
 
+	writeFile(outputFile, configStr)
+}
+
+func writeFile(outputFile string, content string) {
 	file, err := os.OpenFile(
 		outputFile,
 		os.O_WRONLY|os.O_TRUNC|os.O_CREATE,
@@ -98,7 +102,7 @@ func writeNewFile(baseFile, outputFile, filler string) {
 	}
 	defer file.Close()
 
-	byteSlice := []byte(configStr)
+	byteSlice := []byte(content)
 	bytesWritten, err := file.Write(byteSlice)
 	if err != nil {
 		log.Fatal(err)
