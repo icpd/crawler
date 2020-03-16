@@ -22,7 +22,7 @@
 - 安装Go 1.11+
 - `go get github.com/whoisix/subscribe2clash`
 - `export GO111MODULE=on`
-- 编译 `make`
+- 编译 `make build`
 - 启动 `./main`
 - 访问http://localhost:8162/?sub_link=你的订阅链接
 
@@ -30,7 +30,7 @@
 
 - -h ：帮助
 - -gc ：生成clash配置文件，不启动api服务
-- -b ：clahs配置基础文件，参考`config/clash/base_clash.yaml`
+- -b ：clash配置基础文件，参考`config/clash/base_clash.yaml`
 - -o ：配置文件名
 - -l ：api服务监听地址
 - -p ：api服务监听端口
