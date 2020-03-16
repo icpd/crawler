@@ -12,6 +12,7 @@ var github = map[string]string{
 	"Microsoft":        "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Microsoft.list",
 	"ProxyGFWlist":     "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyGFWlist.list",
 	"ProxyLite":        "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyLite.list",
+	"BanEasyListChina": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanEasyListChina.list",
 }
 
 // 国内镜像 https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@latest/
@@ -26,6 +27,21 @@ var cn = map[string]string{
 	"Microsoft":        "https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Microsoft.list",
 	"ProxyGFWlist":     "https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ProxyGFWlist.list",
 	"ProxyLite":        "https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ProxyLite.list",
+	"BanEasyListChina": "https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/BanEasyListChina.list",
+}
+
+var Group = map[string]string{
+	"Apple":            "DIRECT",
+	"BanAD":            "广告拦截",
+	"BanProgramAD":     "广告拦截",
+	"ChinaCompanyIp":   "DIRECT",
+	"ChinaDomain":      "DIRECT",
+	"ChinaIp":          "DIRECT",
+	"LocalAreaNetwork": "DIRECT",
+	"Microsoft":        "DIRECT",
+	"ProxyGFWlist":     "节点选择",
+	"ProxyLite":        "节点选择",
+	"BanEasyListChina": "广告拦截",
 }
 
 func GetUrls(origin string, ProxyLite bool) map[string]string {
