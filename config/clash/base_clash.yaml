@@ -144,13 +144,13 @@ Proxy Group:
 
 # 规则
 Rule:
+# %s将被替换为acl路由规则
 %s
 
   # GeoIP China
   - GEOIP,CN,DIRECT
 
   # 自定义
-  - DOMAIN-KEYWORD,dev,DIRECT
-  - DOMAIN,account.jetbrains.com,广告拦截
+  - DOMAIN-KEYWORD,duandada,DIRECT
 
   - MATCH,final
