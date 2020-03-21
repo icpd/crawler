@@ -35,6 +35,7 @@
 - -l ：api服务监听地址
 - -p ：api服务监听端口
 - -origin ：acl规则获取地址。cn：国内镜像，github：github获取
+- -proxy ：http代理
 
 ## 参考
 
