@@ -1,10 +1,12 @@
 package acl
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
@@ -76,6 +78,7 @@ func GenerateConfig(genOptions ...GenOption) {
 	close(urlCh)
 	wg.Wait()
 	r := MergeRule(s...)
+	r = unique(r)
 
 	writeNewFile(option.baseFile, option.outputFile, r)
 }
@@ -108,4 +111,23 @@ func writeFile(outputFile string, content string) {
 		log.Fatal(err)
 	}
 	log.Printf("Wrote %d bytes.\n", bytesWritten)
+}
+
+func unique(rules string) string {
+	var filterMap = make(map[string]interface{})
+	scanner := bufio.NewScanner(strings.NewReader(rules))
+
+	var builder strings.Builder
+
+	for scanner.Scan() {
+		if scanner.Text() == "" {
+			builder.WriteString("\n")
+			continue
+		}
+		if _, ok := filterMap[scanner.Text()]; !ok {
+			filterMap[scanner.Text()] = struct{}{}
+			builder.WriteString(scanner.Text()+"\n")
+		}
+	}
+	return builder.String()
 }
