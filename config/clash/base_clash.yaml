@@ -144,7 +144,7 @@ Proxy Group:
 
 # 规则
 Rule:
-# %s将被替换为acl路由规则
+# %%s将被替换为acl路由规则
 %s
 
   # GeoIP China
