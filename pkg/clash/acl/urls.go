@@ -43,8 +43,8 @@ var (
 		"BanEasyListChina": "广告拦截",
 	}
 	Sort = []string{
-		"ProxyGFWlist", "ProxyLite",
 		"BanAD", "BanProgramAD", "BanEasyListChina",
+		"ProxyGFWlist", "ProxyLite",
 		"ChinaDomain", "Microsoft", "LocalAreaNetwork", "ChinaCompanyIp", "ChinaIp",
 	}
 )
