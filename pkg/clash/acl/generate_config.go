@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"strings"
-	"sync"
 
 	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
 	"github.com/whoisix/subscribe2clash/utils/req"
@@ -53,30 +52,15 @@ func GenerateConfig(genOptions ...GenOption) {
 	subscribe.OutputFile = option.outputFile
 
 	var s []string
-	var wg sync.WaitGroup
 	urls := GetUrls(option.origin, false)
-	urlCh := make(chan map[string]string)
 
-	workerCount := len(urls)
-	wg.Add(workerCount)
-	for i := 0; i < workerCount; i++ {
-		go func() {
-			defer wg.Done()
-			for ch := range urlCh {
-				resp, _ := req.HttpGet(ch["url"])
-				s = append(s, AddProxyGroup(resp, Group[ch["group"]]))
-			}
-		}()
-	}
-
-	for k, url := range urls {
-		urlCh <- map[string]string{
-			"url":   url,
-			"group": k,
+	for _, g := range Sort {
+		if u, ok := urls[g]; ok {
+			resp, _ := req.HttpGet(u)
+			s = append(s, AddProxyGroup(resp, Group[g]))
 		}
 	}
-	close(urlCh)
-	wg.Wait()
+
 	r := MergeRule(s...)
 	r = unique(r)
 
@@ -126,7 +110,7 @@ func unique(rules string) string {
 		}
 		if _, ok := filterMap[scanner.Text()]; !ok {
 			filterMap[scanner.Text()] = struct{}{}
-			builder.WriteString(scanner.Text()+"\n")
+			builder.WriteString(scanner.Text() + "\n")
 		}
 	}
 	return builder.String()
