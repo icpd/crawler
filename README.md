@@ -14,7 +14,7 @@
 ### 二进制
 
 - [release](https://github.com/whoisix/subscribe2clash/releases)下载对应的版本
-- 解压后执行`./main -b 基础配置文件路径`
+- 解压后执行`./main -b 你的基础配置文件 -origin cn`
 - 访问http://localhost:8162/?sub_link=你的订阅链接
 
 ### 源码

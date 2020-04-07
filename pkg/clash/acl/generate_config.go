@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
@@ -79,6 +80,11 @@ func writeNewFile(baseFile, outputFile, filler string) {
 }
 
 func writeFile(outputFile string, content string) {
+	dir := path.Dir(outputFile)
+	if !Exists(dir) {
+		mkDir(dir)
+	}
+
 	file, err := os.OpenFile(
 		outputFile,
 		os.O_WRONLY|os.O_TRUNC|os.O_CREATE,
@@ -114,4 +120,23 @@ func unique(rules string) string {
 		}
 	}
 	return builder.String()
+}
+
+func Exists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		if os.IsExist(err) {
+			return true
+		}
+		return false
+	}
+	return true
+}
+
+func mkDir(path string) {
+	dir, _ := os.Getwd()
+	err := os.MkdirAll(dir+"/"+path, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
 }
