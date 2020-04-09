@@ -39,14 +39,15 @@ func init() {
 	flag.Parse()
 }
 
-func main() {
-	if h {
-		flag.Usage()
-		return
-	}
-
+func options() []acl.GenOption {
 	var options []acl.GenOption
 	if origin != "" {
+		switch origin {
+		case "cn", "github":
+		default:
+			fmt.Println("the origin argument can only be github or cn")
+			os.Exit(0)
+		}
 		options = append(options, acl.WithOrigin(origin))
 	}
 	if baseFile != "" {
@@ -55,6 +56,17 @@ func main() {
 	if outputFile != "" {
 		options = append(options, acl.WithOutputFile(outputFile))
 	}
+	return options
+}
+
+func main() {
+	if h {
+		flag.Usage()
+		return
+	}
+
+	// 配置文件相关设置
+	options := options()
 
 	if gc {
 		acl.GenerateConfig(options...)
