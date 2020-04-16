@@ -32,15 +32,26 @@ func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
 
 	var proxy []map[string]interface{}
 	var proxiesStr []string
+	names := map[string]int{}
 
 	for _, proto := range proxies {
 		o := reflect.ValueOf(proto)
 		nameField := o.FieldByName("Name")
-		proxyItem := make(map[string]interface{})
+		proto := make(map[string]interface{})
 		j, _ := json.Marshal(proto)
-		json.Unmarshal(j, &proxyItem)
-		proxy = append(proxy, proxyItem)
-		c.Proxy = append(c.Proxy, proxyItem)
+		_ = json.Unmarshal(j, &proto)
+
+		name := nameField.String()
+		if index, ok := names[name]; ok {
+			names[name] = index + 1
+			name = fmt.Sprintf("%s%d", name, index+1)
+		} else {
+			names[name] = 0
+		}
+		proto["name"] = name
+
+		proxy = append(proxy, proto)
+		c.Proxy = append(c.Proxy, proto)
 		proxiesStr = append(proxiesStr, nameField.String())
 	}
 
