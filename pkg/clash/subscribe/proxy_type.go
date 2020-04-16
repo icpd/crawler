@@ -20,7 +20,7 @@ type Vmess struct {
 	PS   string      `json:"ps"`
 	TLS  string      `json:"tls"`
 	Type string      `json:"type"`
-	V    string      `json:"v"`
+	V    interface{}      `json:"v"`
 }
 
 type ClashVmess struct {
