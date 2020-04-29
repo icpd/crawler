@@ -1,15 +1,12 @@
 # subscribe2clash
 
-订阅转换clash配置，支持多订阅链接导入，多个链接以英文逗号分割。路由规则来自ACL4SSR，启动程序后将自动更新，可选择github源和国内镜像源。
+Clash配置托管，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR)的Clash路由规则。  
 
-## 支持订阅类型
+支持v2ray\ss\ssr\ssd订阅转换。  
 
-- v2ray
-- ss
-- ssr
-- ssd
+支持多订阅一起转换，多个连接用英文逗号隔开。
 
-## 使用
+## 启动服务
 
 ### 二进制
 
@@ -28,14 +25,42 @@
 
 ## 命令
 
-- -h ：帮助
-- -gc ：生成clash配置文件，不启动api服务
-- -b ：clash配置基础文件，参考`config/clash/base_clash.yaml`
-- -o ：配置文件名
-- -l ：api服务监听地址
-- -p ：api服务监听端口
-- -origin ：acl规则获取地址。cn：国内镜像，github：github获取
-- -proxy ：http代理
+- 如果只想生成clash配置文件（没有节点数据），不启用api服务，可使用命令
+
+  ```
+  ./main -gc
+  ```
+
+- 指定自定义基础配置文件，可在里面添加自定义的路由规则，程序将按照这个文件写入路由信息，可以参考[config/clash/base_clash.yaml](https://github.com/whoisix/subscribe2clash/blob/master/config/clash/base_clash.yaml)，`%s`将被程序替换为ACL的路由规则。
+
+  ```
+  ./main -b ./yourfile.yaml
+  ```
+
+- 指定输出的配置文件。默认情况下配置文件会输出为`./config/clash/acl.yaml`，可以通过以下命令来重新指定。
+
+  ```
+  ./main -o ./yourconfig.yaml
+  ```
+
+- 获取ACL规则的源地址。cn：国内镜像，github：github获取。默认从github获取。
+
+  ```
+  ./main -origin github
+  ./main -origin cn
+  ```
+
+- 启用http代理。由于网络原因，ACL的github源可能连接不上，所以需要配合代理一起服用。
+
+  ```
+  ./main -proxy http://127.0.0.1:7890
+  ```
+
+- 指定api服务监听端口，默认监听8162端口。
+
+  ```
+  ./main -p 8162
+  ```
 
 ## 参考
 
