@@ -1,6 +1,6 @@
 # subscribe2clash
 
-Clash配置托管，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR)的Clash路由规则。  
+Clash配置转换，路由规则自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR)的Clash规则。  
 
 支持v2ray\ss\ssr\ssd订阅转换。  
 
