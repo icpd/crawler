@@ -19,7 +19,7 @@
 ## 简介
 Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR)路由规则。  
 
-支持v2ray\ss\ssr\ssd订阅转换。  
+支持v2ray\trojan\ss\ssr\ssd订阅转换。  
 
 支持多订阅一起转换，多个订阅连接用英文逗号隔开。
 
