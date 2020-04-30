@@ -6,13 +6,13 @@
 
 <p align="center">
   <a href="https://github.com/whoisix/subscribe2clash/actions">
-    <img src="https://img.shields.io/github/workflow/status/whoisix/subscribe2clash/Go?style=flat-square" alt="Github Actions">
+    <img src="https://img.shields.io/github/workflow/status/whoisix/subscribe2clash/Go" alt="Github Actions">
   </a>
   <a href="https://goreportcard.com/report/github.com/whoisix/subscribe2clash">
-    <img src="https://goreportcard.com/badge/github.com/whoisix/subscribe2clash?style=flat-square">
+    <img src="https://goreportcard.com/badge/github.com/whoisix/subscribe2clash">
   </a>
   <a href="https://github.com/whoisix/subscribe2clash/releases">
-    <img src="https://img.shields.io/github/release/whoisix/subscribe2clash/all.svg?style=flat-square">
+    <img src="https://img.shields.io/github/release/whoisix/subscribe2clash/all.svg">
   </a>
 </p>
 
