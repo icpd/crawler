@@ -12,6 +12,7 @@ import (
 )
 
 var ssReg = regexp.MustCompile(`(?m)ss://(\w+)@([^:]+):(\d+)\?plugin=([^;]+);\w+=(\w+)(?:;obfs-host=)?([^#]+)?#(.+)`)
+var trojanReg = regexp.MustCompile(`(?m)(.+)@([\d\.]+):(\d+)\?allowInsecure=\d&peer=(.+)#(.+)`)
 
 func ParseProxy(contentSlice []string) []interface{} {
 	var proxies []interface{}
@@ -49,6 +50,13 @@ func ParseProxy(contentSlice []string) []interface{} {
 				ss := ssConf(s)
 				if ss.Name != "" && !filterNode(ss.Name) {
 					proxies = append(proxies, ss)
+				}
+			case strings.HasPrefix(scanner.Text(), "trojan://"):
+				s := scanner.Text()[9:]
+				s = strings.TrimSpace(s)
+				trojan := trojanConf(s)
+				if trojan.Name != "" && !filterNode(trojan.Name) {
+					proxies = append(proxies, trojan)
 				}
 			}
 		}
@@ -247,6 +255,29 @@ func ssConf(s string) ClashSS {
 	ss.PluginOpts = p
 
 	return ss
+}
+
+func trojanConf(s string) Trojan {
+	s, err := url.PathUnescape(s)
+	if err != nil {
+		return Trojan{}
+	}
+
+	findStr := trojanReg.FindStringSubmatch(s)
+
+	if len(findStr) < 6 {
+		return Trojan{}
+	}
+
+	return Trojan{
+		Name:     findStr[5],
+		Type:     "trojan",
+		Server:   findStr[2],
+		Password: findStr[1],
+		Sni:      findStr[4],
+		Port:     findStr[3],
+	}
+
 }
 
 func filterNode(nodeName string) bool {

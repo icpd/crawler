@@ -107,3 +107,12 @@ type Clash struct {
 	CFWByPass         []string                 `yaml:"cfw-bypass"`
 	CFWLatencyTimeout int                      `yaml:"cfw-latency-timeout"`
 }
+
+type Trojan struct {
+	Name     string      `json:"name"`
+	Type     string      `json:"type"`
+	Server   string      `json:"server"`
+	Password string      `json:"password"`
+	Sni      string      `json:"sni"`
+	Port     interface{} `json:"port"`
+}
