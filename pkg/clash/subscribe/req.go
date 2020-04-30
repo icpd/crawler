@@ -32,6 +32,10 @@ func GetSubContent(query string) ([]string, error) {
 		}
 
 		decoded, err := mybase64.Base64DecodeStripped(content)
+		if err != nil {
+			log.Println("base64 decode err:", err)
+			continue
+		}
 		contentSlice = append(contentSlice, string(decoded))
 	}
 
