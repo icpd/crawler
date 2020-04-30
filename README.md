@@ -43,14 +43,14 @@ Clash配置转换，路由规则自动获取[ACL4SSR](https://github.com/ACL4SSR
   ./main -o ./yourconfig.yaml
   ```
 
-- 获取ACL规则的源地址。cn：国内镜像，github：github获取。默认从github获取。
+- 获取ACL规则的源地址。cn：国内镜像（更新可能没有github及时），github：github获取。默认从github获取。
 
   ```
   ./main -origin github
   ./main -origin cn
   ```
 
-- 启用http代理。由于网络原因，ACL的github源可能连接不上，所以需要配合代理一起服用。
+- 启用http代理。由于网络原因，ACL的github源可能连接不上，但又不想使用镜像时，你可能需要配合代理一起食用。
 
   ```
   ./main -proxy http://127.0.0.1:7890
