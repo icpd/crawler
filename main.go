@@ -25,6 +25,7 @@ var (
 	origin     string
 	listenAddr string
 	listenPort string
+	t          int
 )
 
 func init() {
@@ -36,6 +37,7 @@ func init() {
 	flag.StringVar(&listenAddr, "l", "0.0.0.0", "listen address")
 	flag.StringVar(&listenPort, "p", "8162", "listen port")
 	flag.StringVar(&req.Proxy, "proxy", "", "http proxy")
+	flag.IntVar(&t, "t", 6, "规则更新频率（小时）")
 	flag.Parse()
 }
 
@@ -75,8 +77,9 @@ func main() {
 
 	go func() {
 		acl.GenerateConfig(options...)
+		tick := time.Tick(time.Duration(t) * time.Hour)
 		for {
-			<-time.After(6 * time.Hour)
+			<-tick
 			acl.GenerateConfig(options...)
 		}
 	}()

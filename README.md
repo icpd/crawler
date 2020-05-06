@@ -2,6 +2,7 @@
   <br>subscribe2clash<br>
 </h1>
 
+
 <h4 align="center">Clash规则配置转换</h4>
 
 <p align="center">
@@ -16,7 +17,9 @@
   </a>
 </p>
 
+
 ## 简介
+
 Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR)路由规则。  
 
 支持v2ray\trojan\ss\ssr\ssd订阅转换。  
@@ -79,6 +82,14 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ./main -p 8162
   ```
 
+- 指定更新规则频率，单位小时，默认每6小时拉取一次。
+
+  ```
+  ./main -t 6
+  ```
+
+  
+
 ## 参考
 
 - https://github.com/ne1llee/v2ray2clash
@@ -86,4 +97,3 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 ## 引用
 
 - https://github.com/ACL4SSR/ACL4SSR
-
