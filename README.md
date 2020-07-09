@@ -31,7 +31,7 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 ### 二进制
 
 - [release](https://github.com/whoisix/subscribe2clash/releases)下载对应的版本
-- 解压后执行`./main -b 你的基础配置文件 -origin cn`
+- 解压后执行`./subscribe2clash -b 你的基础配置文件 -origin cn`
 - 访问http://localhost:8162/?sub_link=你的订阅链接
 
 ### 源码
