@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
 	"github.com/whoisix/subscribe2clash/utils/req"
@@ -64,6 +65,11 @@ func GenerateConfig(genOptions ...GenOption) {
 
 	r := MergeRule(s...)
 	r = unique(r)
+
+	if utf8.RuneCountInString(r) > 50000 {
+		log.Println("获取规则失败或不完整，不写入配置文件")
+		return
+	}
 
 	writeNewFile(option.baseFile, option.outputFile, r)
 }
