@@ -101,9 +101,9 @@ type Clash struct {
 	// ExternalUI         string                   `yaml:"external-ui"`
 	// Secret             string                   `yaml:"secret"`
 	// Experimental       map[string]interface{} 	`yaml:"experimental"`
-	Proxy             []map[string]interface{} `yaml:"Proxy"`
-	ProxyGroup        []map[string]interface{} `yaml:"Proxy Group"`
-	Rule              []string                 `yaml:"Rule"`
+	Proxy             []map[string]interface{} `yaml:"proxies"`
+	ProxyGroup        []map[string]interface{} `yaml:"proxy-groups"`
+	Rule              []string                 `yaml:"rules"`
 	CFWByPass         []string                 `yaml:"cfw-bypass"`
 	CFWLatencyTimeout int                      `yaml:"cfw-latency-timeout"`
 }
