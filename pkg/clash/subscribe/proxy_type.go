@@ -46,9 +46,9 @@ type ClashRSSR struct {
 	Password      string      `json:"password"`
 	Cipher        string      `json:"cipher"`
 	Protocol      string      `json:"protocol"`
-	ProtocolParam string      `json:"protocolparam"`
+	ProtocolParam string      `json:"protocol-param"`
 	OBFS          string      `json:"obfs"`
-	OBFSParam     string      `json:"obfsparam"`
+	OBFSParam     string      `json:"obfs-param"`
 }
 
 type ClashSS struct {

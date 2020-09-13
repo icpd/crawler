@@ -3,11 +3,12 @@ package subscribe
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
 	"reflect"
+
+	"gopkg.in/yaml.v2"
 )
 
 var OutputFile string
