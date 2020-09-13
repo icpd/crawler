@@ -51,7 +51,9 @@ func GenerateConfig(genOptions ...GenOption) {
 		fn(&option)
 	}
 
+	subscribe.RwMtx.Lock()
 	subscribe.OutputFile = option.outputFile
+	subscribe.RwMtx.Unlock()
 
 	var s []string
 	urls := GetUrls(option.origin, false)
