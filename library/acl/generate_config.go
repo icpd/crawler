@@ -10,8 +10,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
-	"github.com/whoisix/subscribe2clash/utils/req"
+	"github.com/whoisix/subscribe2clash/library/req"
+	"github.com/whoisix/subscribe2clash/library/subscribe"
 )
 
 type genOption struct {

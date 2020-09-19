@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/whoisix/subscribe2clash/utils/req"
+	"github.com/whoisix/subscribe2clash/library/req"
 )
 
 var url string

@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/whoisix/subscribe2clash/utils/mybase64"
+	"github.com/whoisix/subscribe2clash/library/mybase64"
 )
 
 var ssReg = regexp.MustCompile(`(?m)ss://(\w+)@([^:]+):(\d+)\?plugin=([^;]+);\w+=(\w+)(?:;obfs-host=)?([^#]+)?#(.+)`)

@@ -6,11 +6,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/whoisix/subscribe2clash/pkg/clash/subscribe"
-	"github.com/whoisix/subscribe2clash/utils/mybase64"
+	"github.com/whoisix/subscribe2clash/library/mybase64"
+	"github.com/whoisix/subscribe2clash/library/subscribe"
 )
 
-func Clash(c *gin.Context) {
+type ClashController struct {
+}
+
+func (cc *ClashController) Clash(c *gin.Context) {
 	query := c.Request.URL.String()
 	idx := strings.Index(query, "sub_link=")
 
