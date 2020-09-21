@@ -10,6 +10,4 @@ func main() {
 	if err := boot.Boot(); err != nil {
 		log.Fatalln("启动失败：", err)
 	}
-
-	log.Println("启动成功")
 }
