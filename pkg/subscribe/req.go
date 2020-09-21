@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/whoisix/subscribe2clash/library/mybase64"
-	"github.com/whoisix/subscribe2clash/library/req"
+	"github.com/whoisix/subscribe2clash/pkg/mybase64"
+	"github.com/whoisix/subscribe2clash/pkg/req"
 )
 
 func GetSubContent(query string) ([]string, error) {

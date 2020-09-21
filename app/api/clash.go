@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/whoisix/subscribe2clash/library/mybase64"
-	"github.com/whoisix/subscribe2clash/library/subscribe"
+	"github.com/whoisix/subscribe2clash/pkg/mybase64"
+	"github.com/whoisix/subscribe2clash/pkg/subscribe"
 )
 
 type ClashController struct {

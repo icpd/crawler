@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/whoisix/subscribe2clash/library/acl"
-	"github.com/whoisix/subscribe2clash/library/global"
+	"github.com/whoisix/subscribe2clash/pkg/acl"
+	"github.com/whoisix/subscribe2clash/pkg/global"
 )
 
 func Options() []acl.GenOption {

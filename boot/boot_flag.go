@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/whoisix/subscribe2clash/library/global"
-	"github.com/whoisix/subscribe2clash/library/req"
+	"github.com/whoisix/subscribe2clash/pkg/global"
+	"github.com/whoisix/subscribe2clash/pkg/req"
 )
 
 func init() {
