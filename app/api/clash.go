@@ -10,8 +10,7 @@ import (
 	"github.com/whoisix/subscribe2clash/pkg/subscribe"
 )
 
-type ClashController struct {
-}
+type ClashController struct {}
 
 func (cc *ClashController) Clash(c *gin.Context) {
 	query := c.Request.URL.String()
