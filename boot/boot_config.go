@@ -8,7 +8,7 @@ import (
 	"github.com/whoisix/subscribe2clash/pkg/global"
 )
 
-func generateConfig()  {
+func generateConfig() {
 	// 配置文件相关设置
 	options := Options()
 
