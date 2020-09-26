@@ -14,7 +14,8 @@ PLATFORM_LIST = \
 	linux-armv8 \
 	linux-mips-softfloat \
 	linux-mips-hardfloat \
-	linux-mipsle \
+	linux-mipsle-softfloat \
+	linux-mipsle-hardfloat \
 	linux-mips64 \
 	linux-mips64le \
 	freebsd-386 \
@@ -24,7 +25,10 @@ WINDOWS_ARCH_LIST = \
 	windows-386 \
 	windows-amd64
 
-all: linux-amd64 darwin-amd64 windows-amd64 linux-armv7 # Most used
+all: linux-amd64 darwin-amd64 windows-amd64 # Most used
+
+docker:
+	$(GOBUILD) -o $(BINDIR)/$(NAME)-$@
 
 darwin-amd64:
 	GOARCH=amd64 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
@@ -53,8 +57,11 @@ linux-mips-softfloat:
 linux-mips-hardfloat:
 	GOARCH=mips GOMIPS=hardfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
 
-linux-mipsle:
-	GOARCH=mipsle GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
+linux-mipsle-softfloat:
+	GOARCH=mipsle GOMIPS=softfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
+
+linux-mipsle-hardfloat:
+	GOARCH=mipsle GOMIPS=hardfloat GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
 
 linux-mips64:
 	GOARCH=mips64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@
@@ -89,5 +96,3 @@ all-arch: $(PLATFORM_LIST) $(WINDOWS_ARCH_LIST)
 releases: $(gz_releases) $(zip_releases)
 clean:
 	rm $(BINDIR)/*
-build:
-	go build main.go
