@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +16,7 @@ import (
 	"github.com/whoisix/subscribe2clash/pkg/global"
 )
 
-func initHttpServer() error {
+func initHttpServer() {
 
 	r := gin.New()
 	r.Use(gin.Logger())
@@ -29,21 +30,26 @@ func initHttpServer() error {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+			log.Fatalf("listen: %v\n", err)
 		}
 	}()
 
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	log.Println("shutdown server ...")
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Add(-1)
+		quit := make(chan os.Signal)
+		signal.Notify(quit, os.Interrupt)
+		<-quit
+		log.Println("shutdown server ...")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := srv.Shutdown(ctx); err != nil {
-		return fmt.Errorf("server shutdown: %w", err)
-	}
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if err := srv.Shutdown(ctx); err != nil {
+			log.Fatalf("server shutdown: %v", err)
+		}
+	}()
+	wg.Wait()
 
 	log.Println("server exiting")
-	return nil
 }

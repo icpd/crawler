@@ -1,11 +1,7 @@
 package boot
 
-func Boot() error {
+func Init() {
 	initFlag()
 	generateConfig()
-
-	if err := initHttpServer(); err != nil {
-		return err
-	}
-	return nil
+	initHttpServer()
 }
