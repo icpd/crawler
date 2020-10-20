@@ -2,7 +2,6 @@ package boot
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
 	"github.com/whoisix/subscribe2clash/pkg/global"
@@ -20,7 +19,6 @@ func init() {
 	flag.StringVar(&req.Proxy, "proxy", "", "http proxy")
 	flag.IntVar(&global.T, "t", 6, "规则更新频率（小时）")
 	flag.Parse()
-	fmt.Println("init flag ......")
 }
 
 func initFlag() {
