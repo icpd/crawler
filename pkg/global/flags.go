@@ -9,4 +9,5 @@ var (
 	ListenAddr string
 	ListenPort string
 	T          int
+	Version    bool
 )

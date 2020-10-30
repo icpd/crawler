@@ -2,7 +2,9 @@ NAME=subscribe2clash
 BINDIR=bin
 VERSION=$(shell git describe --tags || echo "unknown version")
 BUILDTIME=$(shell date -u)
-GOBUILD=CGO_ENABLED=0 go build -ldflags '-w -s'
+GOBUILD=CGO_ENABLED=0 go build -trimpath -ldflags '-X "github.com/whoisix/subscribe2clash/constant.Version=$(VERSION)" \
+                      		-X "github.com/whoisix/subscribe2clash/constant.BuildTime=$(BUILDTIME)" \
+                      		-w -s -buildid='
 
 PLATFORM_LIST = \
 	darwin-amd64 \
