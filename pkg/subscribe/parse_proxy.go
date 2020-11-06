@@ -11,8 +11,11 @@ import (
 	"github.com/whoisix/subscribe2clash/pkg/mybase64"
 )
 
-var ssReg = regexp.MustCompile(`(?m)ss://(\w+)@([^:]+):(\d+)\?plugin=([^;]+);\w+=(\w+)(?:;obfs-host=)?([^#]+)?#(.+)`)
-var trojanReg = regexp.MustCompile(`(?m)(.+)@([\d\.]+):(\d+)\?allowInsecure=\d&peer=(.+)#(.+)`)
+var (
+	ssReg      = regexp.MustCompile(`(?m)ss://(\w+)@([^:]+):(\d+)\?plugin=([^;]+);\w+=(\w+)(?:;obfs-host=)?([^#]+)?#(.+)`)
+	trojanReg  = regexp.MustCompile(`(?m)^trojan://(.+)@(.+):(\d+)\?allowInsecure=\d&peer=(.+)#(.+)`)
+	trojanReg2 = regexp.MustCompile(`(?m)^trojan://(.+)@(.+):(\d+)#(.+)$`)
+)
 
 func ParseProxy(contentSlice []string) []interface{} {
 	var proxies []interface{}
@@ -52,7 +55,7 @@ func ParseProxy(contentSlice []string) []interface{} {
 					proxies = append(proxies, ss)
 				}
 			case strings.HasPrefix(scanner.Text(), "trojan://"):
-				s := scanner.Text()[9:]
+				s := scanner.Text()
 				s = strings.TrimSpace(s)
 				trojan := trojanConf(s)
 				if trojan.Name != "" && !filterNode(trojan.Name) {
@@ -264,37 +267,32 @@ func trojanConf(s string) Trojan {
 	}
 
 	findStr := trojanReg.FindStringSubmatch(s)
+	if len(findStr) == 6 {
+		return Trojan{
+			Name:     findStr[5],
+			Type:     "trojan",
+			Server:   findStr[2],
+			Password: findStr[1],
+			Sni:      findStr[4],
+			Port:     findStr[3],
+		}
+	}
 
-	if len(findStr) < 6 {
+	findStr = trojanReg2.FindStringSubmatch(s)
+	if len(findStr) < 5 {
 		return Trojan{}
 	}
 
 	return Trojan{
-		Name:     findStr[5],
+		Name:     findStr[4],
 		Type:     "trojan",
 		Server:   findStr[2],
 		Password: findStr[1],
-		Sni:      findStr[4],
 		Port:     findStr[3],
 	}
-
 }
 
 func filterNode(nodeName string) bool {
-
-	if strings.Contains(nodeName, "阿里云上海中转") {
-		return true
-	}
-
-	if strings.Contains(nodeName, "微信") {
-		return true
-	}
-
-	// 过滤官网
-	if strings.Contains(nodeName, "官网") {
-		return true
-	}
-
 	// 过滤剩余流量
 	if strings.Contains(nodeName, "剩余流量") {
 		return true

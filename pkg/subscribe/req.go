@@ -2,6 +2,7 @@ package subscribe
 
 import (
 	"encoding/base64"
+	"fmt"
 	"log"
 	"strings"
 
@@ -18,6 +19,7 @@ func GetSubContent(query string) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+		content = strings.TrimSpace(content)
 
 		if strings.HasPrefix(content, "ssd://") {
 			content = content[6:]
@@ -31,6 +33,7 @@ func GetSubContent(query string) ([]string, error) {
 			continue
 		}
 
+		fmt.Println(content)
 		decoded, err := mybase64.Base64DecodeStripped(content)
 		if err != nil {
 			log.Println("base64 decode err:", err)

@@ -113,6 +113,6 @@ type Trojan struct {
 	Type     string      `json:"type"`
 	Server   string      `json:"server"`
 	Password string      `json:"password"`
-	Sni      string      `json:"sni"`
+	Sni      string      `json:"sni,omitempty"`
 	Port     interface{} `json:"port"`
 }
