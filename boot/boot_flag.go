@@ -32,7 +32,7 @@ func initFlag() {
 	}
 
 	if global.Version {
-		fmt.Printf("Clash %s %s %s %s\n", constant.Version, runtime.GOOS, runtime.GOARCH, constant.BuildTime)
+		fmt.Printf("subscribe2clash %s %s %s %s\n", constant.Version, runtime.GOOS, runtime.GOARCH, constant.BuildTime)
 		os.Exit(0)
 	}
 }
