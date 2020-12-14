@@ -44,21 +44,6 @@ proxy-groups:
       - ✈ 故障切换
       - DIRECT
       - "1"
-  - name: 国外媒体
-    type: select
-    proxies:
-      - 节点选择
-      - ✈ 手动选择
-      - ✈ 延迟最低
-      - ✈ 故障切换
-      - DIRECT
-  - name: 国内媒体
-    type: select
-    proxies:
-      - DIRECT
-      - 节点选择
-      - ✈ 手动选择
-      - ✈ 延迟最低
   - name: 广告拦截
     type: select
     proxies:
