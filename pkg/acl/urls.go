@@ -61,7 +61,7 @@ func GetUrls(origin string, ProxyLite bool) map[string]string {
 func getCn() map[string]string {
 	cn := make(map[string]string, len(github))
 	for r, u := range github {
-		cn[r] = strings.ReplaceAll(u, "raw.githubusercontent.com", "raw.staticdn.net")
+		cn[r] = strings.ReplaceAll(u, "raw.githubusercontent.com", "raw.sevencdn.com")
 	}
 
 	return cn
