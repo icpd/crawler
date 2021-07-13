@@ -12,13 +12,11 @@ import (
 )
 
 func init() {
-	flag.BoolVar(&global.H, "h", false, "help")
+	flag.BoolVar(&global.H, "h", false, "帮助信息")
 	flag.BoolVar(&global.Gc, "gc", false, "生成clash配置文件")
-	flag.StringVar(&global.Origin, "origin", "github", "acl规则获取地址。cn：国内镜像，github：github获取")
 	flag.StringVar(&global.BaseFile, "b", "", "clash基础配置文件")
 	flag.StringVar(&global.OutputFile, "o", "", "输出clash文件名")
-	flag.StringVar(&global.ListenAddr, "l", "0.0.0.0", "listen address")
-	flag.StringVar(&global.ListenPort, "p", "8162", "listen port")
+	flag.StringVar(&global.Listen, "l", "0.0.0.0:8162", "监听地址")
 	flag.StringVar(&req.Proxy, "proxy", "", "http代理")
 	flag.IntVar(&global.T, "t", 6, "规则更新频率（小时）")
 	flag.BoolVar(&global.Version, "version", false, "查看版本信息")

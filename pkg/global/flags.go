@@ -6,7 +6,7 @@ var (
 	BaseFile   string
 	OutputFile string
 	Origin     string
-	ListenAddr string
+	Listen     string
 	ListenPort string
 	T          int
 	Version    bool

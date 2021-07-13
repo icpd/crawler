@@ -36,7 +36,7 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 
 ### 源码
 
-- 安装Go 1.13+
+- 安装Go 1.16+
 - `go get github.com/whoisix/subscribe2clash`
 - `export GO111MODULE=on`
 - 编译 `make build`
@@ -63,7 +63,7 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ./main -o ./yourconfig.yaml
   ```
 
-- 获取ACL规则的源地址。cn：国内镜像（更新可能没有github及时），github：github获取。默认从github获取。
+- ~~获取ACL规则的源地址。cn：国内镜像（更新可能没有github及时），github：github获取。默认从github获取。~~
 
   ```
   ./main -origin github

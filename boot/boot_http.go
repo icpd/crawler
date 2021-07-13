@@ -2,7 +2,6 @@ package boot
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -24,7 +23,7 @@ func initHttpServer() {
 	router.RegisterRouter(r)
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("%s:%s", global.ListenAddr, global.ListenPort),
+		Addr:    global.Listen,
 		Handler: r,
 	}
 
