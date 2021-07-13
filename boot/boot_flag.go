@@ -24,11 +24,6 @@ func init() {
 }
 
 func initFlag() {
-	if global.H {
-		flag.Usage()
-		os.Exit(0)
-	}
-
 	if global.Version {
 		fmt.Printf("subscribe2clash %s %s %s %s\n", constant.Version, runtime.GOOS, runtime.GOARCH, constant.BuildTime)
 		os.Exit(0)
