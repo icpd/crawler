@@ -1,5 +1,5 @@
 bin/
-/.idea/
+/.idea
 *_test.go
-/config/clash/acl.yaml
+/config
 main

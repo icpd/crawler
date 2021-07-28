@@ -1,8 +1,9 @@
 package req
 
 import (
-	"github.com/parnurzeal/gorequest"
 	"time"
+
+	"github.com/parnurzeal/gorequest"
 )
 
 var Proxy string

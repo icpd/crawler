@@ -7,14 +7,15 @@ import (
 	"runtime"
 
 	"github.com/whoisix/subscribe2clash/constant"
-	"github.com/whoisix/subscribe2clash/pkg/global"
-	"github.com/whoisix/subscribe2clash/pkg/req"
+	"github.com/whoisix/subscribe2clash/internal/global"
+	"github.com/whoisix/subscribe2clash/internal/req"
 )
 
 func init() {
 	flag.BoolVar(&global.GenerateConfig, "gc", false, "生成clash配置文件")
 	flag.StringVar(&global.BaseFile, "b", "", "clash基础配置文件")
-	flag.StringVar(&global.OutputFile, "o", "", "输出clash文件名")
+	flag.StringVar(&global.RulesFile, "r", "", "路由配置文件")
+	flag.StringVar(&global.OutputFile, "o", "", "clash配置文件名")
 	flag.StringVar(&global.Listen, "l", "0.0.0.0:8162", "监听地址")
 	flag.StringVar(&req.Proxy, "proxy", "", "http代理")
 	flag.IntVar(&global.Tick, "t", 6, "规则更新频率（小时）")

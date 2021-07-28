@@ -1,4 +1,4 @@
-package mybase64
+package xbase64
 
 import (
 	"encoding/base64"

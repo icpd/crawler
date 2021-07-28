@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/whoisix/subscribe2clash/pkg/mybase64"
-	"github.com/whoisix/subscribe2clash/pkg/req"
+	"github.com/whoisix/subscribe2clash/internal/req"
+	"github.com/whoisix/subscribe2clash/internal/xbase64"
 )
 
 func GetSubContent(query string) ([]string, error) {
@@ -32,7 +32,7 @@ func GetSubContent(query string) ([]string, error) {
 			continue
 		}
 
-		decoded, err := mybase64.Base64DecodeStripped(content)
+		decoded, err := xbase64.Base64DecodeStripped(content)
 		if err != nil {
 			log.Println("base64 decode err:", err)
 			continue

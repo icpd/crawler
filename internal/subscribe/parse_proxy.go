@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/whoisix/subscribe2clash/pkg/mybase64"
+	"github.com/whoisix/subscribe2clash/internal/xbase64"
 )
 
 var (
@@ -69,7 +69,7 @@ func ParseProxy(contentSlice []string) []interface{} {
 }
 
 func v2rConf(s string) ClashVmess {
-	vmconfig, err := mybase64.Base64DecodeStripped(s)
+	vmconfig, err := xbase64.Base64DecodeStripped(s)
 	if err != nil {
 		return ClashVmess{}
 	}
@@ -150,7 +150,7 @@ func ssdConf(ssdJson string) []ClashSS {
 }
 
 func ssrConf(s string) ClashRSSR {
-	rawSSRConfig, err := mybase64.Base64DecodeStripped(s)
+	rawSSRConfig, err := xbase64.Base64DecodeStripped(s)
 	if err != nil {
 		return ClashRSSR{}
 	}
@@ -183,7 +183,7 @@ func ssrConf(s string) ClashRSSR {
 		return ClashRSSR{}
 	}
 	passwordBase64 := suffix[0]
-	password, err := mybase64.Base64DecodeStripped(passwordBase64)
+	password, err := xbase64.Base64DecodeStripped(passwordBase64)
 	if err != nil {
 		return ClashRSSR{}
 	}
@@ -195,7 +195,7 @@ func ssrConf(s string) ClashRSSR {
 	}
 
 	for k, v := range m {
-		de, err := mybase64.Base64DecodeStripped(v[0])
+		de, err := xbase64.Base64DecodeStripped(v[0])
 		if err != nil {
 			return ClashRSSR{}
 		}
@@ -227,7 +227,7 @@ func ssConf(s string) ClashSS {
 	if len(findStr) < 6 {
 		return ClashSS{}
 	}
-	rawSSRConfig, err := mybase64.Base64DecodeStripped(findStr[1])
+	rawSSRConfig, err := xbase64.Base64DecodeStripped(findStr[1])
 	if err != nil {
 		return ClashSS{}
 	}

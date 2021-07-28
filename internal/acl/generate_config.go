@@ -11,12 +11,12 @@ import (
 	"text/template"
 	"unsafe"
 
-	"github.com/whoisix/subscribe2clash/pkg/req"
-	"github.com/whoisix/subscribe2clash/pkg/subscribe"
+	"github.com/whoisix/subscribe2clash/internal/req"
+	"github.com/whoisix/subscribe2clash/internal/subscribe"
 )
 
 //go:embed config/default_base_config.yaml
-var defaultBaseConfig string
+var defaultBaseConfig []byte
 
 type genOption struct {
 	baseFile   string
@@ -39,7 +39,7 @@ func WithOutputFile(filepath string) GenOption {
 
 func GenerateConfig(genOptions ...GenOption) {
 	option := genOption{
-		outputFile: "./config/clash/acl.yaml",
+		outputFile: "./config/acl.yaml",
 	}
 
 	for _, fn := range genOptions {
@@ -61,14 +61,15 @@ func GenerateConfig(genOptions ...GenOption) {
 	r := MergeRule(s...)
 	r = unique(r)
 
-	var configContent string
+	var (
+		configContent []byte
+		err           error
+	)
 	if option.baseFile != "" {
-		fileBytes, err := ioutil.ReadFile(option.baseFile)
+		configContent, err = ioutil.ReadFile(option.baseFile)
 		if err != nil {
 			log.Fatal("读取基础配置文件失败", err)
 		}
-
-		configContent = *(*string)(unsafe.Pointer(&fileBytes))
 	} else {
 		configContent = defaultBaseConfig
 	}
@@ -76,8 +77,9 @@ func GenerateConfig(genOptions ...GenOption) {
 	writeNewFile(configContent, option.outputFile, r)
 }
 
-func writeNewFile(baseConfigContent, outputFile, filler string) {
-	tpl, err := template.New("config").Parse(baseConfigContent)
+func writeNewFile(configContent []byte, outputFile, filler string) {
+	ctt := *(*string)(unsafe.Pointer(&configContent))
+	tpl, err := template.New("config").Parse(ctt)
 	if err != nil {
 		log.Fatal("解析配置模版失败", err)
 	}
