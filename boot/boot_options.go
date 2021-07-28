@@ -1,24 +1,12 @@
 package boot
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/whoisix/subscribe2clash/pkg/acl"
-	"github.com/whoisix/subscribe2clash/pkg/global"
+	"github.com/whoisix/subscribe2clash/internal/acl"
+	"github.com/whoisix/subscribe2clash/internal/global"
 )
 
 func Options() []acl.GenOption {
 	var options []acl.GenOption
-	if global.Origin != "" {
-		switch global.Origin {
-		case "cn", "github":
-		default:
-			fmt.Println("the origin argument can only be github or cn")
-			os.Exit(0)
-		}
-		options = append(options, acl.WithOrigin(global.Origin))
-	}
 	if global.BaseFile != "" {
 		options = append(options, acl.WithBaseFile(global.BaseFile))
 	}

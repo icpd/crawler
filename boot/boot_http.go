@@ -2,7 +2,6 @@ package boot
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/whoisix/subscribe2clash/app/router"
-	"github.com/whoisix/subscribe2clash/pkg/global"
+	"github.com/whoisix/subscribe2clash/internal/global"
 )
 
 func initHttpServer() {
@@ -24,7 +23,7 @@ func initHttpServer() {
 	router.RegisterRouter(r)
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("%s:%s", global.ListenAddr, global.ListenPort),
+		Addr:    global.Listen,
 		Handler: r,
 	}
 
@@ -38,7 +37,7 @@ func initHttpServer() {
 	wg.Add(1)
 	go func() {
 		defer wg.Add(-1)
-		quit := make(chan os.Signal)
+		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, os.Interrupt)
 		<-quit
 		log.Println("shutdown server ...")

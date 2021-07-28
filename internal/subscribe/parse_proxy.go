@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/whoisix/subscribe2clash/pkg/mybase64"
+	"github.com/whoisix/subscribe2clash/internal/xbase64"
 )
 
 var (
@@ -69,7 +69,7 @@ func ParseProxy(contentSlice []string) []interface{} {
 }
 
 func v2rConf(s string) ClashVmess {
-	vmconfig, err := mybase64.Base64DecodeStripped(s)
+	vmconfig, err := xbase64.Base64DecodeStripped(s)
 	if err != nil {
 		return ClashVmess{}
 	}
@@ -102,7 +102,7 @@ func v2rConf(s string) ClashVmess {
 	} else {
 		clashVmess.TLS = false
 	}
-	if "ws" == vmess.Net {
+	if vmess.Net == "ws" {
 		clashVmess.Network = vmess.Net
 		clashVmess.WSPATH = vmess.Path
 	}
@@ -150,12 +150,12 @@ func ssdConf(ssdJson string) []ClashSS {
 }
 
 func ssrConf(s string) ClashRSSR {
-	rawSSRConfig, err := mybase64.Base64DecodeStripped(s)
+	rawSSRConfig, err := xbase64.Base64DecodeStripped(s)
 	if err != nil {
 		return ClashRSSR{}
 	}
 	params := strings.Split(string(rawSSRConfig), `:`)
-	if 6 != len(params) {
+	if len(params) != 6 {
 		return ClashRSSR{}
 	}
 	ssr := ClashRSSR{}
@@ -168,7 +168,7 @@ func ssrConf(s string) ClashRSSR {
 
 	// 如果兼容ss协议，就转换为clash的ss配置
 	// https://github.com/Dreamacro/clash
-	if "origin" == ssr.Protocol && "plain" == ssr.OBFS {
+	if ssr.Protocol == "origin" && ssr.OBFS == "plain" {
 		switch ssr.Cipher {
 		case "aes-128-gcm", "aes-192-gcm", "aes-256-gcm",
 			"aes-128-cfb", "aes-192-cfb", "aes-256-cfb",
@@ -179,11 +179,11 @@ func ssrConf(s string) ClashRSSR {
 		}
 	}
 	suffix := strings.Split(params[SSRSuffix], "/?")
-	if 2 != len(suffix) {
+	if len(suffix) != 2 {
 		return ClashRSSR{}
 	}
 	passwordBase64 := suffix[0]
-	password, err := mybase64.Base64DecodeStripped(passwordBase64)
+	password, err := xbase64.Base64DecodeStripped(passwordBase64)
 	if err != nil {
 		return ClashRSSR{}
 	}
@@ -195,7 +195,7 @@ func ssrConf(s string) ClashRSSR {
 	}
 
 	for k, v := range m {
-		de, err := mybase64.Base64DecodeStripped(v[0])
+		de, err := xbase64.Base64DecodeStripped(v[0])
 		if err != nil {
 			return ClashRSSR{}
 		}
@@ -227,12 +227,12 @@ func ssConf(s string) ClashSS {
 	if len(findStr) < 6 {
 		return ClashSS{}
 	}
-	rawSSRConfig, err := mybase64.Base64DecodeStripped(findStr[1])
+	rawSSRConfig, err := xbase64.Base64DecodeStripped(findStr[1])
 	if err != nil {
 		return ClashSS{}
 	}
 	params := strings.Split(string(rawSSRConfig), `:`)
-	if 2 != len(params) {
+	if len(params) != 2 {
 		return ClashSS{}
 	}
 

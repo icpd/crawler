@@ -2,31 +2,28 @@ package acl
 
 import (
 	"bufio"
-	"fmt"
+	_ "embed"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
 	"strings"
-	"unicode/utf8"
+	"text/template"
+	"unsafe"
 
-	"github.com/whoisix/subscribe2clash/pkg/req"
-	"github.com/whoisix/subscribe2clash/pkg/subscribe"
+	"github.com/whoisix/subscribe2clash/internal/req"
+	"github.com/whoisix/subscribe2clash/internal/subscribe"
 )
 
+//go:embed config/default_base_config.yaml
+var defaultBaseConfig []byte
+
 type genOption struct {
-	origin     string
 	baseFile   string
 	outputFile string
 }
 
 type GenOption func(option *genOption)
-
-func WithOrigin(s string) GenOption {
-	return func(option *genOption) {
-		option.origin = s
-	}
-}
 
 func WithBaseFile(filepath string) GenOption {
 	return func(option *genOption) {
@@ -42,9 +39,7 @@ func WithOutputFile(filepath string) GenOption {
 
 func GenerateConfig(genOptions ...GenOption) {
 	option := genOption{
-		origin:     "github",
-		baseFile:   "./config/clash/base_clash.yaml",
-		outputFile: "./config/clash/acl.yaml",
+		outputFile: "./config/acl.yaml",
 	}
 
 	for _, fn := range genOptions {
@@ -56,38 +51,39 @@ func GenerateConfig(genOptions ...GenOption) {
 	subscribe.RwMtx.Unlock()
 
 	var s []string
-	urls := GetUrls(option.origin, false)
-
-	for _, g := range Sort {
-		if u, ok := urls[g]; ok {
-			resp, _ := req.HttpGet(u)
-			s = append(s, AddProxyGroup(resp, Group[g]))
-		}
+	rules := GetRules()
+	for _, r := range rules {
+		log.Println(r.url, r.rule)
+		resp, _ := req.HttpGet(r.url)
+		s = append(s, AddProxyGroup(resp, r.rule))
 	}
 
 	r := MergeRule(s...)
 	r = unique(r)
 
-	if utf8.RuneCountInString(r) < 50000 {
-		log.Println("获取规则失败或不完整，不写入配置文件")
-		return
+	var (
+		configContent []byte
+		err           error
+	)
+	if option.baseFile != "" {
+		configContent, err = ioutil.ReadFile(option.baseFile)
+		if err != nil {
+			log.Fatal("读取基础配置文件失败", err)
+		}
+	} else {
+		configContent = defaultBaseConfig
 	}
 
-	writeNewFile(option.baseFile, option.outputFile, r)
+	writeNewFile(configContent, option.outputFile, r)
 }
 
-func writeNewFile(baseFile, outputFile, filler string) {
-	fileBytes, err := ioutil.ReadFile(baseFile)
+func writeNewFile(configContent []byte, outputFile, filler string) {
+	ctt := *(*string)(unsafe.Pointer(&configContent))
+	tpl, err := template.New("config").Parse(ctt)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("解析配置模版失败", err)
 	}
 
-	configStr := fmt.Sprintf(string(fileBytes), filler)
-
-	writeFile(outputFile, configStr)
-}
-
-func writeFile(outputFile string, content string) {
 	dir := path.Dir(outputFile)
 	if !Exists(dir) {
 		mkDir(dir)
@@ -103,12 +99,10 @@ func writeFile(outputFile string, content string) {
 	}
 	defer file.Close()
 
-	byteSlice := []byte(content)
-	bytesWritten, err := file.Write(byteSlice)
+	err = tpl.Execute(file, filler)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Wrote %d bytes.\n", bytesWritten)
 }
 
 func unique(rules string) string {
@@ -133,10 +127,7 @@ func unique(rules string) string {
 func Exists(path string) bool {
 	_, err := os.Stat(path)
 	if err != nil {
-		if os.IsExist(err) {
-			return true
-		}
-		return false
+		return os.IsExist(err)
 	}
 	return true
 }

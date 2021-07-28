@@ -1,4 +1,4 @@
 bin/
-/.idea/
-*_test.go
-/config/clash/acl.yaml
+/.idea
+/config
+main

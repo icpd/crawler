@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/whoisix/subscribe2clash/pkg/mybase64"
-	"github.com/whoisix/subscribe2clash/pkg/subscribe"
+	"github.com/whoisix/subscribe2clash/internal/subscribe"
+	"github.com/whoisix/subscribe2clash/internal/xbase64"
 )
 
 type ClashController struct{}
@@ -44,5 +44,5 @@ func (cc *ClashController) Clash(c *gin.Context) {
 		return
 	}
 
-	c.String(http.StatusOK, mybase64.UnicodeEmojiDecode(string(config)))
+	c.String(http.StatusOK, xbase64.UnicodeEmojiDecode(string(config)))
 }

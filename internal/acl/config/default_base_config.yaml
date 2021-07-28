@@ -76,8 +76,7 @@ proxy-groups:
 
 # 规则
 rules:
-# %%s将被替换为acl路由规则
-%s
+{{.}}
 
   # GeoIP China
   - GEOIP,CN,DIRECT

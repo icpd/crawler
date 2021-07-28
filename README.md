@@ -31,12 +31,12 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 ### 二进制
 
 - [release](https://github.com/whoisix/subscribe2clash/releases)下载对应的版本
-- 解压后执行`./subscribe2clash -b 你的基础配置文件 -origin cn`
+- 解压后执行`./subscribe2clash`
 - 访问http://localhost:8162/?sub_link=你的订阅链接
 
 ### 源码
 
-- 安装Go 1.13+
+- 安装Go 1.16+
 - `go get github.com/whoisix/subscribe2clash`
 - `export GO111MODULE=on`
 - 编译 `make build`
@@ -51,24 +51,24 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ./main -gc
   ```
 
-- 指定自定义基础配置文件，可在里面添加自定义的路由规则，程序将按照这个文件写入路由信息，可以参考[config/clash/base_clash.yaml](https://github.com/whoisix/subscribe2clash/blob/master/config/clash/base_clash.yaml)，`%s`将被程序替换为ACL的路由规则。
+- 指定自定义基础配置文件，可在里面添加自定义的路由规则，程序将按照这个文件写入路由信息。可参考[internal/acl/config/default_base_config.yaml](https://github.com/whoisix/subscribe2clash/blob/master/internal/acl/config/default_base_config.yaml) ，`{{.}}`将被程序替换为ACL的路由规则。
 
   ```
   ./main -b ./yourfile.yaml
   ```
 
-- 指定输出的配置文件。默认情况下配置文件会输出为`./config/clash/acl.yaml`，可以通过以下命令来重新指定。
+- 指定自定义碎片路由配置文件，可在该配置文件中自定义添加ACL碎片规则文件。可参考[internal/acl/config/default_rules.ini](https://github.com/whoisix/subscribe2clash/blob/master/internal/acl/config/default_rules.ini)
+
+  ```
+  ./main -r ./yourfile.ini
+  ```
+
+- 指定输出的配置文件。默认情况下配置文件会输出为`./config/acl.yaml`，可以通过以下命令来重新指定。
 
   ```
   ./main -o ./yourconfig.yaml
   ```
 
-- 获取ACL规则的源地址。cn：国内镜像（更新可能没有github及时），github：github获取。默认从github获取。
-
-  ```
-  ./main -origin github
-  ./main -origin cn
-  ```
 
 - 启用http代理。由于网络原因，ACL的github源可能连接不上，但又不想使用镜像时，你可能需要配合代理一起食用。
 
@@ -76,10 +76,10 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ./main -proxy http://127.0.0.1:7890
   ```
 
-- 指定api服务监听端口，默认监听8162端口。
+- 指定服务监听地址，默认监听`127.0.0.1:8162`端口。
 
   ```
-  ./main -p 8162
+  ./main -p 127.0.0.1:8162
   ```
 
 - 指定更新规则频率，单位小时，默认每6小时拉取一次。

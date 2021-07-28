@@ -65,7 +65,7 @@ func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
 	for _, group := range c.ProxyGroup {
 		groupProxies := group["proxies"].([]interface{})
 		for i, proxie := range groupProxies {
-			if "1" == proxie {
+			if proxie == "1" {
 				groupProxies = groupProxies[:i]
 				var tmpGroupProxies []string
 				for _, s := range groupProxies {
