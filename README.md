@@ -63,12 +63,6 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ./main -o ./yourconfig.yaml
   ```
 
-- ~~获取ACL规则的源地址。cn：国内镜像（更新可能没有github及时），github：github获取。默认从github获取。~~
-
-  ```
-  ./main -origin github
-  ./main -origin cn
-  ```
 
 - 启用http代理。由于网络原因，ACL的github源可能连接不上，但又不想使用镜像时，你可能需要配合代理一起食用。
 
@@ -76,10 +70,10 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ./main -proxy http://127.0.0.1:7890
   ```
 
-- 指定api服务监听端口，默认监听8162端口。
+- 指定服务监听地址，默认监听`127.0.0.1:8162`端口。
 
   ```
-  ./main -p 8162
+  ./main -p 127.0.0.1:8162
   ```
 
 - 指定更新规则频率，单位小时，默认每6小时拉取一次。
