@@ -102,7 +102,7 @@ func v2rConf(s string) ClashVmess {
 	} else {
 		clashVmess.TLS = false
 	}
-	if "ws" == vmess.Net {
+	if vmess.Net == "ws" {
 		clashVmess.Network = vmess.Net
 		clashVmess.WSPATH = vmess.Path
 	}
@@ -155,7 +155,7 @@ func ssrConf(s string) ClashRSSR {
 		return ClashRSSR{}
 	}
 	params := strings.Split(string(rawSSRConfig), `:`)
-	if 6 != len(params) {
+	if len(params) != 6 {
 		return ClashRSSR{}
 	}
 	ssr := ClashRSSR{}
@@ -168,7 +168,7 @@ func ssrConf(s string) ClashRSSR {
 
 	// 如果兼容ss协议，就转换为clash的ss配置
 	// https://github.com/Dreamacro/clash
-	if "origin" == ssr.Protocol && "plain" == ssr.OBFS {
+	if ssr.Protocol == "origin" && ssr.OBFS == "plain" {
 		switch ssr.Cipher {
 		case "aes-128-gcm", "aes-192-gcm", "aes-256-gcm",
 			"aes-128-cfb", "aes-192-cfb", "aes-256-cfb",
@@ -179,7 +179,7 @@ func ssrConf(s string) ClashRSSR {
 		}
 	}
 	suffix := strings.Split(params[SSRSuffix], "/?")
-	if 2 != len(suffix) {
+	if len(suffix) != 2 {
 		return ClashRSSR{}
 	}
 	passwordBase64 := suffix[0]
@@ -232,7 +232,7 @@ func ssConf(s string) ClashSS {
 		return ClashSS{}
 	}
 	params := strings.Split(string(rawSSRConfig), `:`)
-	if 2 != len(params) {
+	if len(params) != 2 {
 		return ClashSS{}
 	}
 
