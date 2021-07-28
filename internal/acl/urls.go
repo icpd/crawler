@@ -10,7 +10,7 @@ import (
 	"github.com/whoisix/subscribe2clash/internal/global"
 )
 
-//go:embed config/default_rules.ini
+//go:embed ../../config/default_rules.ini
 var defaultRulesConfig []byte
 
 type Rules struct {
