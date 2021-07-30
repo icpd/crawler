@@ -46,9 +46,7 @@ func GenerateConfig(genOptions ...GenOption) {
 		fn(&option)
 	}
 
-	subscribe.RwMtx.Lock()
 	subscribe.OutputFile = option.outputFile
-	subscribe.RwMtx.Unlock()
 
 	var s []string
 	rules := GetRules()
@@ -97,7 +95,12 @@ func writeNewFile(configContent []byte, outputFile, filler string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(file)
 
 	err = tpl.Execute(file, filler)
 	if err != nil {

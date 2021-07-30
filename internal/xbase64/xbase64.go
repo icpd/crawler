@@ -7,11 +7,14 @@ import (
 	"strings"
 )
 
+var (
+	// emoji表情的数据表达式
+	re = regexp.MustCompile(`(?i)\\\\u[0-9a-zA-Z]+`)
+	// 提取emoji数据表达式
+	reg = regexp.MustCompile(`(?i)\\\\u`)
+)
+
 func UnicodeEmojiDecode(s string) string {
-	//emoji表情的数据表达式
-	re := regexp.MustCompile(`(?i)\\\\u[0-9a-zA-Z]+`)
-	//提取emoji数据表达式
-	reg := regexp.MustCompile(`(?i)\\\\u`)
 	src := re.FindAllString(s, -1)
 	for i := 0; i < len(src); i++ {
 		e := reg.ReplaceAllString(src[i], "")

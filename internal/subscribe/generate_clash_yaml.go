@@ -7,14 +7,12 @@ import (
 	"log"
 	"os"
 	"reflect"
-	"sync"
 
 	"gopkg.in/yaml.v2"
 )
 
 var (
 	OutputFile string
-	RwMtx      sync.RWMutex
 )
 
 func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
@@ -64,8 +62,8 @@ func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
 
 	for _, group := range c.ProxyGroup {
 		groupProxies := group["proxies"].([]interface{})
-		for i, proxie := range groupProxies {
-			if proxie == "1" {
+		for i, p := range groupProxies {
+			if p == "1" {
 				groupProxies = groupProxies[:i]
 				var tmpGroupProxies []string
 				for _, s := range groupProxies {
@@ -90,9 +88,7 @@ func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
 func GenerateClashConfig(proxies []interface{}) ([]byte, error) {
 	clash := Clash{}
 
-	RwMtx.RLock()
 	r := clash.LoadTemplate(OutputFile, proxies)
-	RwMtx.RUnlock()
 	if r == nil {
 		return nil, fmt.Errorf("sublink 返回数据格式不对")
 	}
