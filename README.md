@@ -3,7 +3,7 @@
 </h1>
 
 
-<h4 align="center">Clash规则配置转换</h4>
+<h4 align="center">Clash配置转换</h4>
 
 <p align="center">
   <a href="https://github.com/whoisix/subscribe2clash/actions">
@@ -20,7 +20,7 @@
 
 ## 简介
 
-Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR)路由规则。  
+Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR)路由规则。  
 
 支持v2ray\trojan\ss\ssr\ssd订阅转换。**暂不支持单节点转换**  
 
@@ -70,7 +70,7 @@ Clash规则配置转换，自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ```
 
 
-- 启用http代理。由于网络原因，ACL的github源可能连接不上，但又不想使用镜像时，你可能需要配合代理一起食用。
+- 启用http代理。由于网络原因，ACL的github源可能连接不上，你可能需要配合代理一起食用。
 
   ```
   ./main -proxy http://127.0.0.1:7890
