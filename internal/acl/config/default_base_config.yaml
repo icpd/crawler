@@ -82,6 +82,6 @@ rules:
   - GEOIP,CN,DIRECT
 
   # 自定义
-  - DOMAIN-KEYWORD,duandada,DIRECT
+  # - DOMAIN-KEYWORD,site.com,DIRECT
 
   - MATCH,final
