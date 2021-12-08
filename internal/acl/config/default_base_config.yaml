@@ -34,7 +34,8 @@ cfw-latency-timeout: 5000
 # 代理节点
 proxies: ~
 
-# 代理组策略
+# 代理策略组
+# - "1"：表示该策略组会写入解析出来节点信息
 proxy-groups:
   - name: 节点选择
     type: select
