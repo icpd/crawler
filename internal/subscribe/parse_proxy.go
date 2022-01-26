@@ -104,7 +104,7 @@ func v2rConf(s string) ClashVmess {
 	}
 	if vmess.Net == "ws" {
 		clashVmess.Network = vmess.Net
-		clashVmess.WSPATH = vmess.Path
+		clashVmess.WSOpts.Path = vmess.Path
 	}
 
 	return clashVmess

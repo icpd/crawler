@@ -24,18 +24,24 @@ type Vmess struct {
 }
 
 type ClashVmess struct {
-	Name           string            `json:"name,omitempty"`
-	Type           string            `json:"type,omitempty"`
-	Server         string            `json:"server,omitempty"`
-	Port           interface{}       `json:"port,omitempty"`
-	UUID           string            `json:"uuid,omitempty"`
-	AlterID        interface{}       `json:"alterId,omitempty"`
-	Cipher         string            `json:"cipher,omitempty"`
-	TLS            bool              `json:"tls,omitempty"`
-	Network        string            `json:"network,omitempty"`
-	WSPATH         string            `json:"ws-path,omitempty"`
-	WSHeaders      map[string]string `json:"ws-headers,omitempty"`
-	SkipCertVerify bool              `json:"skip-cert-verify,omitempty"`
+	Name           string      `json:"name,omitempty"`
+	Type           string      `json:"type,omitempty"`
+	Server         string      `json:"server,omitempty"`
+	Port           interface{} `json:"port,omitempty"`
+	UUID           string      `json:"uuid,omitempty"`
+	AlterID        interface{} `json:"alterId,omitempty"`
+	Cipher         string      `json:"cipher,omitempty"`
+	TLS            bool        `json:"tls,omitempty"`
+	Network        string      `json:"network,omitempty"`
+	WSOpts         WSOptions   `json:"ws-opts,omitempty"`
+	SkipCertVerify bool        `json:"skip-cert-verify,omitempty"`
+}
+
+type WSOptions struct {
+	Path                string            `json:"path,omitempty"`
+	Headers             map[string]string `json:"headers,omitempty"`
+	MaxEarlyData        int               `json:"max-early-data,omitempty"`
+	EarlyDataHeaderName string            `json:"early-data-header-name,omitempty"`
 }
 
 type ClashRSSR struct {
