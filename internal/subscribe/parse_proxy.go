@@ -13,6 +13,8 @@ import (
 
 var (
 	ssReg      = regexp.MustCompile(`(?m)ss://(\w+)@([^:]+):(\d+)\?plugin=([^;]+);\w+=(\w+)(?:;obfs-host=)?([^#]+)?#(.+)`)
+	ssReg2 = regexp.MustCompile(`(?m)ss://([\-0-9a-z]+):(.+)@(.+):(\d+)(.+)?#(.+)`)
+
 	trojanReg  = regexp.MustCompile(`(?m)^trojan://(.+)@(.+):(\d+)\?allowInsecure=\d&peer=(.+)#(.+)`)
 	trojanReg2 = regexp.MustCompile(`(?m)^trojan://(.+)@(.+):(\d+)#(.+)$`)
 )
@@ -133,7 +135,7 @@ func ssdConf(ssdJson string) []ClashSS {
 		ss.Server = server.Server
 		ss.Port = server.Port
 		ss.Plugin = server.Plugin
-		ss.PluginOpts = PluginOpts{
+		ss.PluginOpts = &PluginOpts{
 			Mode: options["obfs"][0],
 			Host: options["obfs-host"][0],
 		}
@@ -223,39 +225,59 @@ func ssConf(s string) ClashSS {
 		return ClashSS{}
 	}
 
-	findStr := ssReg.FindStringSubmatch(s)
-	if len(findStr) < 6 {
+	findStr := regexp.MustCompile(`(?m)ss://([\/\+=\w]+)(@.+)?#(.+)`).FindStringSubmatch(s)
+	if len(findStr) < 4 {
 		return ClashSS{}
 	}
+
 	rawSSRConfig, err := xbase64.Base64DecodeStripped(findStr[1])
 	if err != nil {
 		return ClashSS{}
 	}
-	params := strings.Split(string(rawSSRConfig), `:`)
-	if len(params) != 2 {
-		return ClashSS{}
-	}
+
+	s = strings.ReplaceAll(s, findStr[1], string(rawSSRConfig))
+	findStr = ssReg2.FindStringSubmatch(s)
 
 	ss := ClashSS{}
 	ss.Type = "ss"
-	ss.Cipher = params[0]
-	ss.Password = params[1]
-	ss.Server = findStr[2]
-	ss.Port = findStr[3]
+	ss.Cipher = findStr[1]
+	ss.Password = findStr[2]
+	ss.Server = findStr[3]
+	ss.Port = findStr[4]
+	ss.Name = findStr[6]
 
-	ss.Plugin = findStr[4]
-	switch {
-	case strings.Contains(ss.Plugin, "obfs"):
-		ss.Plugin = "obfs"
+	if findStr[5] != "" && strings.Contains(findStr[5], "plugin") {
+		query := findStr[5][strings.Index(findStr[5], "?")+1:]
+		queryMap, err := url.ParseQuery(query)
+		if err != nil{
+			return ClashSS{}
+		}
+
+		ss.Plugin = queryMap["plugin"][0]
+		p := new(PluginOpts)
+		switch {
+		case strings.Contains(ss.Plugin, "obfs"):
+			ss.Plugin = "obfs"
+			p.Mode = queryMap["obfs"][0]
+			if strings.Contains(query, "obfs-host="){
+				p.Host = queryMap["obfs-host"][0]
+			}
+			break
+		case ss.Plugin == "v2ray-plugin":
+			p.Mode = queryMap["mode"][0]
+			if strings.Contains(query, "host="){
+				p.Host = queryMap["host"][0]
+			}
+			if strings.Contains(query, "path="){
+				p.Path = queryMap["path"][0]
+			}
+			p.Mux = strings.Contains(query, "mux");
+			p.Tls = strings.Contains(query, "tls");
+			p.SkipCertVerify = true
+			break
+		}
+		ss.PluginOpts = p
 	}
-
-	p := PluginOpts{
-		Mode: findStr[5],
-	}
-	p.Host = findStr[6]
-
-	ss.Name = findStr[7]
-	ss.PluginOpts = p
 
 	return ss
 }
