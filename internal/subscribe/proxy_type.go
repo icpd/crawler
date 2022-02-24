@@ -64,13 +64,17 @@ type ClashSS struct {
 	Port       interface{} `json:"port"`
 	Password   string      `json:"password"`
 	Cipher     string      `json:"cipher"`
-	Plugin     string      `json:"plugin"`
-	PluginOpts PluginOpts  `json:"plugin-opts"`
+	Plugin     string      `json:"plugin,omitempty"`
+	PluginOpts *PluginOpts  `json:"plugin-opts,omitempty"`
 }
 
 type PluginOpts struct {
 	Mode string `json:"mode"`
-	Host string `json:"host"`
+	Host string `json:"host,omitempty"`
+	Tls bool `json:"tls,omitempty"`
+	Path string `json:"path,omitempty"`
+	Mux bool `json:"mux,omitempty"`
+	SkipCertVerify bool `json:"skip-cert-verify,omitempty"`
 }
 
 type SSD struct {
