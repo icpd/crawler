@@ -1,6 +1,6 @@
 module github.com/whoisix/subscribe2clash
 
-go 1.16
+go 1.18
 
 require (
 	github.com/elazarl/goproxy v0.0.0-20200220113713-29f9e0ba54ea // indirect
