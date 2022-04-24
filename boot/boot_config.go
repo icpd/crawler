@@ -18,10 +18,8 @@ func generateConfig() {
 	}
 
 	go func() {
-		acl.GenerateConfig(options...)
 		ticker := time.NewTicker(time.Duration(global.Tick) * time.Hour)
-		for {
-			<-ticker.C
+		for ; true; <-ticker.C {
 			acl.GenerateConfig(options...)
 		}
 	}()
