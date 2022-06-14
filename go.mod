@@ -1,4 +1,4 @@
-module github.com/whoisix/subscribe2clash
+module github.com/icpd/subscribe2clash
 
 go 1.18
 
