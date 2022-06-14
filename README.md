@@ -37,7 +37,7 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 ### 源码
 
 - 安装Go 1.16+
-- `go get github.com/whoisix/subscribe2clash`
+- `go get github.com/icpd/subscribe2clash`
 - `export GO111MODULE=on`
 - 编译 `make build`
 - 启动 `./main`
