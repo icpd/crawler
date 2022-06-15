@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/whoisix/subscribe2clash/app/api"
+	"github.com/icpd/subscribe2clash/app/api"
 )
 
 func clashRouter(r *gin.Engine) {

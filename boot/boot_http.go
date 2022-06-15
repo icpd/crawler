@@ -11,8 +11,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/whoisix/subscribe2clash/app/router"
-	"github.com/whoisix/subscribe2clash/internal/global"
+	"github.com/icpd/subscribe2clash/app/router"
+	"github.com/icpd/subscribe2clash/internal/global"
 )
 
 func initHttpServer() {

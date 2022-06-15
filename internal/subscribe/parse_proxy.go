@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/whoisix/subscribe2clash/internal/xbase64"
+	"github.com/icpd/subscribe2clash/internal/xbase64"
 )
 
 var (
@@ -249,7 +249,7 @@ func ssConf(s string) ClashSS {
 	if findStr[5] != "" && strings.Contains(findStr[5], "plugin") {
 		query := findStr[5][strings.Index(findStr[5], "?")+1:]
 		queryMap, err := url.ParseQuery(query)
-		if err != nil{
+		if err != nil {
 			return ClashSS{}
 		}
 
@@ -259,19 +259,19 @@ func ssConf(s string) ClashSS {
 		case strings.Contains(ss.Plugin, "obfs"):
 			ss.Plugin = "obfs"
 			p.Mode = queryMap["obfs"][0]
-			if strings.Contains(query, "obfs-host="){
+			if strings.Contains(query, "obfs-host=") {
 				p.Host = queryMap["obfs-host"][0]
 			}
 		case ss.Plugin == "v2ray-plugin":
 			p.Mode = queryMap["mode"][0]
-			if strings.Contains(query, "host="){
+			if strings.Contains(query, "host=") {
 				p.Host = queryMap["host"][0]
 			}
-			if strings.Contains(query, "path="){
+			if strings.Contains(query, "path=") {
 				p.Path = queryMap["path"][0]
 			}
-			p.Mux = strings.Contains(query, "mux");
-			p.Tls = strings.Contains(query, "tls");
+			p.Mux = strings.Contains(query, "mux")
+			p.Tls = strings.Contains(query, "tls")
 			p.SkipCertVerify = true
 		}
 		ss.PluginOpts = p

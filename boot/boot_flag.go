@@ -6,9 +6,9 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/whoisix/subscribe2clash/constant"
-	"github.com/whoisix/subscribe2clash/internal/global"
-	"github.com/whoisix/subscribe2clash/internal/req"
+	"github.com/icpd/subscribe2clash/constant"
+	"github.com/icpd/subscribe2clash/internal/global"
+	"github.com/icpd/subscribe2clash/internal/req"
 )
 
 func init() {

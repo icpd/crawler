@@ -1,8 +1,8 @@
 package boot
 
 import (
-	"github.com/whoisix/subscribe2clash/internal/acl"
-	"github.com/whoisix/subscribe2clash/internal/global"
+	"github.com/icpd/subscribe2clash/internal/acl"
+	"github.com/icpd/subscribe2clash/internal/global"
 )
 
 func Options() []acl.GenOption {
