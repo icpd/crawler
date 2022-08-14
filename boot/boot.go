@@ -1,6 +1,6 @@
 package boot
 
-func Init() {
+func Run() {
 	initFlag()
 	generateConfig()
 	initHttpServer()

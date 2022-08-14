@@ -11,22 +11,30 @@ import (
 	"github.com/icpd/subscribe2clash/internal/xbase64"
 )
 
+const (
+	ssrPrefix    = "ssr://"
+	vmessPrefix  = "vmess://"
+	ssPrefix     = "ss://"
+	trojanPrefix = "trojan://"
+)
+
 var (
 	//ssReg      = regexp.MustCompile(`(?m)ss://(\w+)@([^:]+):(\d+)\?plugin=([^;]+);\w+=(\w+)(?:;obfs-host=)?([^#]+)?#(.+)`)
 	ssReg2 = regexp.MustCompile(`(?m)ss://([\-0-9a-z]+):(.+)@(.+):(\d+)(.+)?#(.+)`)
+	ssReg  = regexp.MustCompile(`(?m)ss://([/+=\w]+)(@.+)?#(.+)`)
 
 	trojanReg  = regexp.MustCompile(`(?m)^trojan://(.+)@(.+):(\d+)\?allowInsecure=\d&peer=(.+)#(.+)`)
 	trojanReg2 = regexp.MustCompile(`(?m)^trojan://(.+)@(.+):(\d+)#(.+)$`)
 )
 
-func ParseProxy(contentSlice []string) []interface{} {
-	var proxies []interface{}
+func ParseProxy(contentSlice []string) []any {
+	var proxies []any
 	for _, v := range contentSlice {
 		// ssd
 		if strings.Contains(v, "airport") {
 			ssSlice := ssdConf(v)
 			for _, ss := range ssSlice {
-				if !filterNode(ss.Name) {
+				if ss.Name != "" {
 					proxies = append(proxies, ss)
 				}
 			}
@@ -35,39 +43,37 @@ func ParseProxy(contentSlice []string) []interface{} {
 
 		scanner := bufio.NewScanner(strings.NewReader(v))
 		for scanner.Scan() {
-			switch {
-			case strings.HasPrefix(scanner.Text(), "ssr://"):
-				s := scanner.Text()[6:]
-				s = strings.TrimSpace(s)
-				ssr := ssrConf(s)
-				if ssr.Name != "" && !filterNode(ssr.Name) {
-					proxies = append(proxies, ssr)
-				}
-			case strings.HasPrefix(scanner.Text(), "vmess://"):
-				s := scanner.Text()[8:]
-				s = strings.TrimSpace(s)
-				clashVmess := v2rConf(s)
-				if clashVmess.Name != "" && !filterNode(clashVmess.Name) {
-					proxies = append(proxies, clashVmess)
-				}
-			case strings.HasPrefix(scanner.Text(), "ss://"):
-				s := strings.TrimSpace(scanner.Text())
-				ss := ssConf(s)
-				if ss.Name != "" && !filterNode(ss.Name) {
-					proxies = append(proxies, ss)
-				}
-			case strings.HasPrefix(scanner.Text(), "trojan://"):
-				s := scanner.Text()
-				s = strings.TrimSpace(s)
-				trojan := trojanConf(s)
-				if trojan.Name != "" && !filterNode(trojan.Name) {
-					proxies = append(proxies, trojan)
-				}
+			proxy := parseProxy(scanner.Text())
+			if proxy != nil {
+				proxies = append(proxies, proxy)
 			}
+		}
+
+		if err := scanner.Err(); err != nil {
+			log.Printf("parse proxy failed, err: %v", err)
 		}
 	}
 
 	return proxies
+}
+
+func subProtocolBody(proxy string, prefix string) string {
+	return strings.TrimSpace(proxy[len(prefix):])
+}
+
+func parseProxy(proxy string) any {
+	switch {
+	case strings.HasPrefix(proxy, ssrPrefix):
+		return ssrConf(subProtocolBody(proxy, ssrPrefix))
+	case strings.HasPrefix(proxy, vmessPrefix):
+		return v2rConf(subProtocolBody(proxy, vmessPrefix))
+	case strings.HasPrefix(proxy, ssPrefix):
+		return ssConf(subProtocolBody(proxy, ssPrefix))
+	case strings.HasPrefix(proxy, trojanPrefix):
+		return trojanConf(subProtocolBody(proxy, trojanPrefix))
+	}
+
+	return nil
 }
 
 func v2rConf(s string) ClashVmess {
@@ -78,7 +84,7 @@ func v2rConf(s string) ClashVmess {
 	vmess := Vmess{}
 	err = json.Unmarshal(vmconfig, &vmess)
 	if err != nil {
-		log.Println(err)
+		log.Printf("v2ray config json unmarshal failed, err: %v", err)
 		return ClashVmess{}
 	}
 	clashVmess := ClashVmess{}
@@ -225,7 +231,7 @@ func ssConf(s string) ClashSS {
 		return ClashSS{}
 	}
 
-	findStr := regexp.MustCompile(`(?m)ss://([\/\+=\w]+)(@.+)?#(.+)`).FindStringSubmatch(s)
+	findStr := ssReg.FindStringSubmatch(s)
 	if len(findStr) < 4 {
 		return ClashSS{}
 	}
@@ -310,17 +316,4 @@ func trojanConf(s string) Trojan {
 		Password: findStr[1],
 		Port:     findStr[3],
 	}
-}
-
-func filterNode(nodeName string) bool {
-	// 过滤剩余流量
-	if strings.Contains(nodeName, "剩余流量") {
-		return true
-	}
-
-	if strings.Contains(nodeName, "过期时间") {
-		return true
-	}
-
-	return false
 }

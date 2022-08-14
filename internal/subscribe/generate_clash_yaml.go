@@ -15,34 +15,31 @@ var (
 	OutputFile string
 )
 
-func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
+func (c *Clash) LoadTemplate(path string, proxies []any) []byte {
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
-		log.Printf("[%s] template doesn't exist.", path)
+		log.Printf("[%s] template doesn't exist. err: %v", path, err)
 		return nil
 	}
 	buf, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Printf("[%s] template open the failure.", path)
+		log.Printf("[%s] template open the failure. err: %v", path, err)
 		return nil
 	}
 	err = yaml.Unmarshal(buf, &c)
 	if err != nil {
-		log.Printf("[%s] Template format error.", path)
+		log.Printf("[%s] Template format error. err: %v", path, err)
 	}
 
-	c.Proxy = nil
-
-	var proxy []map[string]interface{}
-	var proxiesStr []string
+	var proxiesName []string
 	names := map[string]int{}
 
 	for _, proto := range proxies {
 		o := reflect.ValueOf(proto)
 		nameField := o.FieldByName("Name")
-		proxyItem := make(map[string]interface{})
+		proxy := make(map[string]any)
 		j, _ := json.Marshal(proto)
-		_ = json.Unmarshal(j, &proxyItem)
+		_ = json.Unmarshal(j, &proxy)
 
 		name := nameField.String()
 		if index, ok := names[name]; ok {
@@ -52,28 +49,27 @@ func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
 			names[name] = 0
 		}
 
-		proxyItem["name"] = name
-		proxy = append(proxy, proxyItem)
-		c.Proxy = append(c.Proxy, proxyItem)
-		proxiesStr = append(proxiesStr, name)
+		proxy["name"] = name
+		c.Proxies = append(c.Proxies, proxy)
+		proxiesName = append(proxiesName, name)
 	}
 
-	c.Proxy = proxy
-
-	for _, group := range c.ProxyGroup {
-		groupProxies, ok := group["proxies"].([]interface{})
+	for _, group := range c.ProxyGroups {
+		groupProxies, ok := group["proxies"].([]any)
 		if !ok {
 			continue
 		}
 		for i, p := range groupProxies {
 			if p == "1" {
 				groupProxies = groupProxies[:i]
-				var tmpGroupProxies []string
+
+				var groupProxiesName []string
 				for _, s := range groupProxies {
-					tmpGroupProxies = append(tmpGroupProxies, s.(string))
+					groupProxiesName = append(groupProxiesName, s.(string))
 				}
-				tmpGroupProxies = append(tmpGroupProxies, proxiesStr...)
-				group["proxies"] = tmpGroupProxies
+				groupProxiesName = append(groupProxiesName, proxiesName...)
+
+				group["proxies"] = groupProxiesName
 				break
 			}
 		}
@@ -88,7 +84,7 @@ func (c *Clash) LoadTemplate(path string, proxies []interface{}) []byte {
 	return d
 }
 
-func GenerateClashConfig(proxies []interface{}) ([]byte, error) {
+func GenerateClashConfig(proxies []any) ([]byte, error) {
 	clash := Clash{}
 
 	r := clash.LoadTemplate(OutputFile, proxies)

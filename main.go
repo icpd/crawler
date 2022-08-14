@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	boot.Init()
+	boot.Run()
 }

@@ -109,7 +109,7 @@ func writeNewFile(configContent []byte, outputFile, filler string) {
 }
 
 func unique(rules string) string {
-	var filterMap = make(map[string]interface{})
+	var filterMap = make(map[string]any)
 	scanner := bufio.NewScanner(strings.NewReader(rules))
 
 	var builder strings.Builder
