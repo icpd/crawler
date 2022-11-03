@@ -32,7 +32,7 @@ jobs:
       - name: Build
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          NAME: clash
+          NAME: subscribe2clash
           BINDIR: bin
         run: make -j releases
 
