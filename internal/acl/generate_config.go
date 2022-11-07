@@ -9,7 +9,6 @@ import (
 	"path"
 	"strings"
 	"text/template"
-	"unsafe"
 
 	"github.com/icpd/subscribe2clash/internal/req"
 	"github.com/icpd/subscribe2clash/internal/subscribe"
@@ -18,36 +17,15 @@ import (
 //go:embed config/default_base_config.yaml
 var defaultBaseConfig []byte
 
-type genOption struct {
+type Gen struct {
 	baseFile   string
 	outputFile string
+
+	configContent []byte
+	rule          string
 }
 
-type GenOption func(option *genOption)
-
-func WithBaseFile(filepath string) GenOption {
-	return func(option *genOption) {
-		option.baseFile = filepath
-	}
-}
-
-func WithOutputFile(filepath string) GenOption {
-	return func(option *genOption) {
-		option.outputFile = filepath
-	}
-}
-
-func GenerateConfig(genOptions ...GenOption) {
-	option := genOption{
-		outputFile: "./config/acl.yaml",
-	}
-
-	for _, fn := range genOptions {
-		fn(&option)
-	}
-
-	subscribe.OutputFile = option.outputFile
-
+func (g *Gen) GenerateConfig() {
 	var s []string
 	rules := GetRules()
 	for _, r := range rules {
@@ -58,37 +36,34 @@ func GenerateConfig(genOptions ...GenOption) {
 
 	r := MergeRule(s...)
 	r = unique(r)
+	g.rule = r
 
-	var (
-		configContent []byte
-		err           error
-	)
-	if option.baseFile != "" {
-		configContent, err = ioutil.ReadFile(option.baseFile)
+	if g.baseFile != "" {
+		var err error
+		g.configContent, err = ioutil.ReadFile(g.baseFile)
 		if err != nil {
 			log.Fatal("读取基础配置文件失败", err)
 		}
 	} else {
-		configContent = defaultBaseConfig
+		g.configContent = defaultBaseConfig
 	}
 
-	writeNewFile(configContent, option.outputFile, r)
+	g.writeNewFile()
 }
 
-func writeNewFile(configContent []byte, outputFile, filler string) {
-	ctt := *(*string)(unsafe.Pointer(&configContent))
-	tpl, err := template.New("config").Parse(ctt)
+func (g *Gen) writeNewFile() {
+	tpl, err := template.New("config").Parse(string(g.configContent))
 	if err != nil {
 		log.Fatal("解析配置模版失败", err)
 	}
 
-	dir := path.Dir(outputFile)
+	dir := path.Dir(g.outputFile)
 	if !Exists(dir) {
 		mkDir(dir)
 	}
 
 	file, err := os.OpenFile(
-		outputFile,
+		g.outputFile,
 		os.O_WRONLY|os.O_TRUNC|os.O_CREATE,
 		0666,
 	)
@@ -102,9 +77,23 @@ func writeNewFile(configContent []byte, outputFile, filler string) {
 		}
 	}(file)
 
-	err = tpl.Execute(file, filler)
+	err = tpl.Execute(file, g.rule)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+type GenOption func(option *Gen)
+
+func WithBaseFile(filepath string) GenOption {
+	return func(option *Gen) {
+		option.baseFile = filepath
+	}
+}
+
+func WithOutputFile(filepath string) GenOption {
+	return func(option *Gen) {
+		option.outputFile = filepath
 	}
 }
 
@@ -141,4 +130,17 @@ func mkDir(path string) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func New(ops ...GenOption) *Gen {
+	gen := Gen{
+		outputFile: "./config/acl.yaml",
+	}
+
+	for _, fn := range ops {
+		fn(&gen)
+	}
+
+	subscribe.OutputFile = gen.outputFile
+	return &gen
 }
