@@ -11,15 +11,16 @@ import (
 	"text/template"
 
 	"github.com/icpd/subscribe2clash/internal/req"
-	"github.com/icpd/subscribe2clash/internal/subscribe"
 )
 
 //go:embed config/default_base_config.yaml
 var defaultBaseConfig []byte
 
+var GlobalGen *Gen
+
 type Gen struct {
+	OutputFile string
 	baseFile   string
-	outputFile string
 
 	configContent []byte
 	rule          string
@@ -57,13 +58,13 @@ func (g *Gen) writeNewFile() {
 		log.Fatal("解析配置模版失败", err)
 	}
 
-	dir := path.Dir(g.outputFile)
+	dir := path.Dir(g.OutputFile)
 	if !Exists(dir) {
 		mkDir(dir)
 	}
 
 	file, err := os.OpenFile(
-		g.outputFile,
+		g.OutputFile,
 		os.O_WRONLY|os.O_TRUNC|os.O_CREATE,
 		0666,
 	)
@@ -93,7 +94,7 @@ func WithBaseFile(filepath string) GenOption {
 
 func WithOutputFile(filepath string) GenOption {
 	return func(option *Gen) {
-		option.outputFile = filepath
+		option.OutputFile = filepath
 	}
 }
 
@@ -134,13 +135,13 @@ func mkDir(path string) {
 
 func New(ops ...GenOption) *Gen {
 	gen := Gen{
-		outputFile: "./config/acl.yaml",
+		OutputFile: "./config/acl.yaml",
 	}
 
 	for _, fn := range ops {
 		fn(&gen)
 	}
+	GlobalGen = &gen
 
-	subscribe.OutputFile = gen.outputFile
-	return &gen
+	return GlobalGen
 }
