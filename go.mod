@@ -3,7 +3,7 @@ module github.com/icpd/subscribe2clash
 go 1.18
 
 require (
-	github.com/gin-gonic/gin v1.7.2
+	github.com/gin-gonic/gin v1.7.7
 	github.com/parnurzeal/gorequest v0.2.16
 	gopkg.in/ini.v1 v1.62.0
 	gopkg.in/yaml.v2 v2.4.0
