@@ -1,6 +1,6 @@
 module github.com/icpd/subscribe2clash
 
-go 1.18
+go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.7.2
