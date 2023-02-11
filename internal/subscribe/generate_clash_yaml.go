@@ -3,7 +3,6 @@ package subscribe
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"reflect"
@@ -21,7 +20,7 @@ func (c *Clash) LoadTemplate(path string, proxies []any) []byte {
 		log.Printf("[%s] template doesn't exist. err: %v", path, err)
 		return nil
 	}
-	buf, err := ioutil.ReadFile(path)
+	buf, err := os.ReadFile(path)
 	if err != nil {
 		log.Printf("[%s] template open the failure. err: %v", path, err)
 		return nil
