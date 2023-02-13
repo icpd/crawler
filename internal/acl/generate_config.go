@@ -3,7 +3,6 @@ package acl
 import (
 	"bufio"
 	_ "embed"
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -64,7 +63,7 @@ func GenerateConfig(genOptions ...GenOption) {
 		err           error
 	)
 	if option.baseFile != "" {
-		configContent, err = ioutil.ReadFile(option.baseFile)
+		configContent, err = os.ReadFile(option.baseFile)
 		if err != nil {
 			log.Fatal("读取基础配置文件失败", err)
 		}

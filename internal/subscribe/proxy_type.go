@@ -45,25 +45,25 @@ type WSOptions struct {
 }
 
 type ClashRSSR struct {
-	Name          string `json:"name"`
-	Type          string `json:"type"`
-	Server        string `json:"server"`
-	Port          any    `json:"port"`
-	Password      string `json:"password"`
-	Cipher        string `json:"cipher"`
-	Protocol      string `json:"protocol"`
-	ProtocolParam string `json:"protocol-param"`
-	OBFS          string `json:"obfs"`
-	OBFSParam     string `json:"obfs-param"`
+	Name          string `json:"name,omitempty"`
+	Type          string `json:"type,omitempty"`
+	Server        string `json:"server,omitempty"`
+	Port          any    `json:"port,omitempty"`
+	Password      string `json:"password,omitempty"`
+	Cipher        string `json:"cipher,omitempty"`
+	Protocol      string `json:"protocol,omitempty"`
+	ProtocolParam string `json:"protocol-param,omitempty"`
+	OBFS          string `json:"obfs,omitempty"`
+	OBFSParam     string `json:"obfs-param,omitempty"`
 }
 
 type ClashSS struct {
-	Name       string      `json:"name"`
-	Type       string      `json:"type"`
-	Server     string      `json:"server"`
-	Port       any         `json:"port"`
-	Password   string      `json:"password"`
-	Cipher     string      `json:"cipher"`
+	Name       string      `json:"name,omitempty"`
+	Type       string      `json:"type,omitempty"`
+	Server     string      `json:"server,omitempty"`
+	Port       any         `json:"port,omitempty"`
+	Password   string      `json:"password,omitempty"`
+	Cipher     string      `json:"cipher,omitempty"`
 	Plugin     string      `json:"plugin,omitempty"`
 	PluginOpts *PluginOpts `json:"plugin-opts,omitempty"`
 }
