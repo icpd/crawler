@@ -6,12 +6,10 @@
 <h4 align="center">Clash配置转换</h4>
 
 <p align="center">
-  <a href="https://github.com/icpd/subscribe2clash/actions">
-    <img src="https://img.shields.io/github/workflow/status/icpd/subscribe2clash/Go" alt="Github Actions">
-  </a>
   <a href="https://goreportcard.com/report/github.com/icpd/subscribe2clash">
     <img src="https://goreportcard.com/badge/github.com/icpd/subscribe2clash">
   </a>
+  <img src="https://img.shields.io/github/go-mod/go-version/Dreamacro/clash?style=flat-square">
   <a href="https://github.com/icpd/subscribe2clash/releases">
     <img src="https://img.shields.io/github/release/icpd/subscribe2clash/all.svg">
   </a>
