@@ -14,7 +14,7 @@ type ClashController struct{}
 func (cc *ClashController) Clash(c *gin.Context) {
 	links, exists := c.GetQuery(key)
 	if !exists {
-		links, exists = c.GetQuery("sub_link") // 兼容旧key
+		links, _ = c.GetQuery("sub_link") // 兼容旧key
 	}
 
 	if links == "" {
