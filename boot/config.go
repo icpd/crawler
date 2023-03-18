@@ -11,16 +11,17 @@ import (
 func generateConfig() {
 	// 配置文件相关设置
 	options := Options()
+	g := acl.New(options...)
 
 	if global.GenerateConfig {
-		acl.GenerateConfig(options...)
+		g.GenerateConfig()
 		os.Exit(0)
 	}
 
 	go func() {
 		ticker := time.NewTicker(time.Duration(global.Tick) * time.Hour)
 		for ; true; <-ticker.C {
-			acl.GenerateConfig(options...)
+			g.GenerateConfig()
 		}
 	}()
 }

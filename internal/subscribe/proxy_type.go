@@ -116,6 +116,9 @@ type Clash struct {
 	Rule              []string         `yaml:"rules"`
 	CFWByPass         []string         `yaml:"cfw-bypass"`
 	CFWLatencyTimeout int              `yaml:"cfw-latency-timeout"`
+
+	path       string
+	rawProxies []any
 }
 
 type Trojan struct {

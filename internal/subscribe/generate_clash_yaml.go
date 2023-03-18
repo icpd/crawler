@@ -7,33 +7,30 @@ import (
 	"os"
 	"reflect"
 
+	"github.com/icpd/subscribe2clash/internal/acl"
 	"gopkg.in/yaml.v2"
 )
 
-var (
-	OutputFile string
-)
-
-func (c *Clash) LoadTemplate(path string, proxies []any) []byte {
-	_, err := os.Stat(path)
+func (c *Clash) LoadTemplate() []byte {
+	_, err := os.Stat(c.path)
 	if err != nil && os.IsNotExist(err) {
-		log.Printf("[%s] template doesn't exist. err: %v", path, err)
+		log.Printf("[%s] template doesn't exist. err: %v", c.path, err)
 		return nil
 	}
 	buf, err := os.ReadFile(path)
 	if err != nil {
-		log.Printf("[%s] template open the failure. err: %v", path, err)
+		log.Printf("[%s] template open the failure. err: %v", c.path, err)
 		return nil
 	}
 	err = yaml.Unmarshal(buf, &c)
 	if err != nil {
-		log.Printf("[%s] Template format error. err: %v", path, err)
+		log.Printf("[%s] Template format error. err: %v", c.path, err)
 	}
 
 	var proxiesName []string
 	names := map[string]int{}
 
-	for _, proto := range proxies {
+	for _, proto := range c.rawProxies {
 		o := reflect.ValueOf(proto)
 		nameField := o.FieldByName("Name")
 		proxy := make(map[string]any)
@@ -84,9 +81,12 @@ func (c *Clash) LoadTemplate(path string, proxies []any) []byte {
 }
 
 func GenerateClashConfig(proxies []any) ([]byte, error) {
-	clash := Clash{}
+	clash := Clash{
+		path:       acl.GlobalGen.OutputFile,
+		rawProxies: proxies,
+	}
 
-	r := clash.LoadTemplate(OutputFile, proxies)
+	r := clash.LoadTemplate()
 	if r == nil {
 		return nil, fmt.Errorf("sublink 返回数据格式不对")
 	}
