@@ -17,7 +17,7 @@ func (c *Clash) LoadTemplate() []byte {
 		log.Printf("[%s] template doesn't exist. err: %v", c.path, err)
 		return nil
 	}
-	buf, err := os.ReadFile(path)
+	buf, err := os.ReadFile(c.path)
 	if err != nil {
 		log.Printf("[%s] template open the failure. err: %v", c.path, err)
 		return nil
