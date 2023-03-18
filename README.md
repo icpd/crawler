@@ -45,10 +45,10 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 通过命令生成 Clash 配置，方便在脚本中使用。
 ```bash
 # 通过文件
- ./subscribe2clash --file=subscribe_file -o=output_file 
+./subscribe2clash --file=subscribe_file -o=output_file 
 
 # 通过订阅链接
- ./subscribe2clash --link=subscribe_link -o=output_file
+./subscribe2clash --link=subscribe_link -o=output_file
 ```
 
 
