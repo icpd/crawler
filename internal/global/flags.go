@@ -8,4 +8,7 @@ var (
 	Listen         string
 	Tick           int
 	Version        bool
+
+	SourceLinks string
+	SourceFile  string
 )
