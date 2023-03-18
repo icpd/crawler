@@ -28,7 +28,7 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 
 - [release](https://github.com/icpd/subscribe2clash/releases)下载对应的版本
 - 解压后执行`./subscribe2clash`
-- 访问http://localhost:8162/?sub_link=你的订阅链接
+- 访问http://localhost:8162/?link=你的订阅链接
 
 ### 源码
 
@@ -37,9 +37,23 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 - `export GO111MODULE=on`
 - 编译 `make build`
 - 启动 `./main`
-- 访问http://localhost:8162/?sub_link=你的订阅链接
+- 访问http://localhost:8162/?link=你的订阅链接
 
-## 命令
+## 使用
+
+### 命令行方式
+通过命令生成 Clash 配置，方便在脚本中使用。
+```bash
+# 通过文件
+ ./subscribe2clash --file=subscribe_file -o=output_file 
+
+# 通过订阅链接
+ ./subscribe2clash --link=subscribe_link -o=output_file
+```
+
+
+### web服务方式
+启动一个 HTTP 服务，访问 http://localhost:8162/?link=你的订阅链接 即可获取 Clash 配置。
 
 - 如果只想生成clash配置文件（没有节点数据），不启用api服务，可使用命令
 
