@@ -1,5 +1,5 @@
 <h1 align="center">
-  <br>subscribe2clash<br>
+  <img src="https://github.com/icpd/subscribe2clash/raw/master/subscribe2clash.png" alt="Clash" width="200">
 </h1>
 
 
