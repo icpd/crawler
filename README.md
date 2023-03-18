@@ -1,9 +1,7 @@
 <h1 align="center">
-  <img src="https://github.com/icpd/subscribe2clash/raw/master/subscribe2clash.png" alt="Clash" width="200">
+  <img src="https://github.com/icpd/subscribe2clash/raw/master/subscribe2clash.png" alt="Clash" width="400">
 </h1>
 
-
-<h4 align="center">Clash配置转换</h4>
 
 <p align="center">
   <a href="https://goreportcard.com/report/github.com/icpd/subscribe2clash">
