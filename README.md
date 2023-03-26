@@ -96,11 +96,5 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 
   
 
-## 参考
 
-- https://github.com/ne1llee/v2ray2clash
-
-## 引用
-
-- https://github.com/ACL4SSR/ACL4SSR
 
