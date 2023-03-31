@@ -7,8 +7,9 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/icpd/subscribe2clash/internal/acl"
 	"gopkg.in/yaml.v2"
+
+	"github.com/icpd/subscribe2clash/internal/acl"
 )
 
 func (c *Clash) LoadTemplate() []byte {
@@ -31,13 +32,21 @@ func (c *Clash) LoadTemplate() []byte {
 	names := map[string]int{}
 
 	for _, proto := range c.rawProxies {
-		o := reflect.ValueOf(proto)
-		nameField := o.FieldByName("Name")
+
 		proxy := make(map[string]any)
 		j, _ := json.Marshal(proto)
 		_ = json.Unmarshal(j, &proxy)
 
-		name := nameField.String()
+		var name string
+		switch reflect.TypeOf(proto).Kind() {
+		case reflect.Struct:
+			name = reflect.ValueOf(proto).FieldByName("Name").String()
+		case reflect.Map:
+			if v, ok := proto.(map[string]any); ok {
+				name = v["name"].(string)
+			}
+		}
+
 		if index, ok := names[name]; ok {
 			names[name] = index + 1
 			name = fmt.Sprintf("%s%d", name, index+1)

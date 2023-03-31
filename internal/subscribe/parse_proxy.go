@@ -8,6 +8,8 @@ import (
 	"regexp"
 	"strings"
 
+	"gopkg.in/yaml.v2"
+
 	"github.com/icpd/subscribe2clash/internal/xbase64"
 )
 
@@ -30,6 +32,15 @@ var (
 func ParseProxy(contentSlice []string) []any {
 	var proxies []any
 	for _, v := range contentSlice {
+		// try unmarshal clash config
+		var c Clash
+		if err := yaml.Unmarshal([]byte(v), &c); err == nil {
+			for _, pg := range c.ProxyGroups {
+				proxies = append(proxies, pg)
+			}
+			continue
+		}
+
 		// ssd
 		if strings.Contains(v, "airport") {
 			ssSlice := ssdConf(v)

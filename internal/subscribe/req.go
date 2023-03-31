@@ -39,6 +39,11 @@ func ParseRawProxies(content string) string {
 		return unsafe.String(&rawProxies[0], len(rawProxies))
 	}
 
+	// if is clash config content return directly
+	if strings.Contains(content, "proxies") {
+		return content
+	}
+
 	rawProxies, err := xbase64.Base64DecodeStripped(content)
 	if err != nil {
 		log.Println("base64 decode err:", err)
