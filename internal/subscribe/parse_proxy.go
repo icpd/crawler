@@ -8,16 +8,17 @@ import (
 	"regexp"
 	"strings"
 
-	"gopkg.in/yaml.v2"
-
 	"github.com/icpd/subscribe2clash/internal/xbase64"
+	"github.com/spf13/cast"
+	"gopkg.in/yaml.v2"
 )
 
 const (
-	ssrPrefix    = "ssr://"
-	vmessPrefix  = "vmess://"
-	ssPrefix     = "ss://"
-	trojanPrefix = "trojan://"
+	ssrHeader      = "ssr://"
+	vmessHeader    = "vmess://"
+	ssHeader       = "ss://"
+	trojanHeader   = "trojan://"
+	hysteriaHeader = "hysteria://"
 )
 
 var (
@@ -74,17 +75,75 @@ func subProtocolBody(proxy string, prefix string) string {
 
 func parseProxy(proxy string) any {
 	switch {
-	case strings.HasPrefix(proxy, ssrPrefix):
-		return ssrConf(subProtocolBody(proxy, ssrPrefix))
-	case strings.HasPrefix(proxy, vmessPrefix):
-		return v2rConf(subProtocolBody(proxy, vmessPrefix))
-	case strings.HasPrefix(proxy, ssPrefix):
-		return ssConf(subProtocolBody(proxy, ssPrefix))
-	case strings.HasPrefix(proxy, trojanPrefix):
-		return trojanConf(subProtocolBody(proxy, trojanPrefix))
+	case strings.HasPrefix(proxy, ssrHeader):
+		return ssrConf(subProtocolBody(proxy, ssrHeader))
+	case strings.HasPrefix(proxy, vmessHeader):
+		return v2rConf(subProtocolBody(proxy, vmessHeader))
+	case strings.HasPrefix(proxy, ssHeader):
+		return ssConf(subProtocolBody(proxy, ssHeader))
+	case strings.HasPrefix(proxy, trojanHeader):
+		return trojanConf(subProtocolBody(proxy, trojanHeader))
+	case strings.HasPrefix(proxy, hysteriaHeader):
+		return hysteriaConf(proxy)
 	}
 
 	return nil
+}
+
+type ClashHysteria struct {
+	Name                string   `yaml:"name"`
+	Type                string   `yaml:"type"`
+	Server              string   `yaml:"server"`
+	Port                int      `yaml:"port"`
+	AuthStr             string   `yaml:"auth-str"`
+	Obfs                string   `yaml:"obfs"`
+	ObfsParams          string   `yaml:"obfs-param"`
+	Alpn                []string `yaml:"alpn"`
+	Protocol            string   `yaml:"protocol"`
+	Up                  string   `yaml:"up"`
+	Down                string   `yaml:"down"`
+	Sni                 string   `yaml:"sni"`
+	SkipCertVerify      bool     `yaml:"skip-cert-verify"`
+	RecvWindowConn      int      `yaml:"recv-window-conn"`
+	RecvWindow          int      `yaml:"recv-window"`
+	Ca                  string   `yaml:"ca"`
+	CaStr               string   `yaml:"ca-str"`
+	DisableMtuDiscovery bool     `yaml:"disable_mtu_discovery"`
+	Fingerprint         string   `yaml:"fingerprint"`
+	FastOpen            bool     `yaml:"fast-open"`
+}
+
+// https://hysteria.network/docs/uri-scheme/
+// hysteria://host:port?protocol=udp&auth=123456&peer=sni.domain&insecure=1&upmbps=100&downmbps=100&alpn=hysteria&obfs=xplus&obfsParam=123456#remarks
+func hysteriaConf(body string) any {
+	u, err := url.Parse(body)
+	if err != nil {
+		log.Printf("parse hysteria failed, err: %v", err)
+		return nil
+	}
+
+	query := u.Query()
+	return &ClashHysteria{
+		Name:                u.Fragment,
+		Type:                "hysteria",
+		Server:              u.Hostname(),
+		Port:                cast.ToInt(u.Port()),
+		AuthStr:             query.Get("auth"),
+		Obfs:                query.Get("obfs"),
+		Alpn:                []string{query.Get("alpn")},
+		Protocol:            query.Get("protocol"),
+		Up:                  query.Get("upmbps"),
+		Down:                query.Get("downmbps"),
+		Sni:                 query.Get("peer"),
+		SkipCertVerify:      cast.ToBool(query.Get("insecure")),
+		RecvWindowConn:      cast.ToInt(query.Get("recv-window-conn")),
+		RecvWindow:          cast.ToInt(query.Get("recv-window")),
+		Ca:                  query.Get("ca"),
+		CaStr:               query.Get("ca-str"),
+		DisableMtuDiscovery: cast.ToBool(query.Get("disable_mtu_discovery")),
+		Fingerprint:         query.Get("fingerprint"),
+		FastOpen:            cast.ToBool(query.Get("fast-open")),
+	}
 }
 
 func v2rConf(s string) ClashVmess {
