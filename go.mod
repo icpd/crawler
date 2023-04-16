@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/parnurzeal/gorequest v0.2.16
+	github.com/spf13/cast v1.5.0
 	gopkg.in/ini.v1 v1.62.0
 	gopkg.in/yaml.v2 v2.4.0
 )
