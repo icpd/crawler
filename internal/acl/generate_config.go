@@ -30,7 +30,11 @@ func (g *Gen) GenerateConfig() {
 	rules := GetRules()
 	for _, r := range rules {
 		log.Println(r.url, r.rule)
-		resp, _ := req.HttpGet(r.url)
+		resp, err := req.HttpGet(r.url)
+		if err != nil {
+			log.Printf("获取规则失败: %s, err:%v", r.url, err)
+		}
+
 		s = append(s, AddProxyGroup(resp, r.rule))
 	}
 
