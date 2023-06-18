@@ -17,7 +17,8 @@ func GetRawProxiesFromLinks(links string) ([]string, error) {
 	for _, link := range subLinks {
 		content, err := req.HttpGet(link)
 		if err != nil {
-			return nil, err
+			log.Printf("Warning: 获取 %s 内容失败, err:%v", link, err)
+			continue
 		}
 
 		rawProxiesSlice = append(rawProxiesSlice, ParseRawProxies(content))

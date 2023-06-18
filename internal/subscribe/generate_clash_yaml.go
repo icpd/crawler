@@ -13,29 +13,39 @@ import (
 )
 
 func (c *Clash) LoadTemplate() []byte {
-	_, err := os.Stat(c.path)
-	if err != nil && os.IsNotExist(err) {
-		log.Printf("[%s] template doesn't exist. err: %v", c.path, err)
-		return nil
-	}
-	buf, err := os.ReadFile(c.path)
-	if err != nil {
-		log.Printf("[%s] template open the failure. err: %v", c.path, err)
-		return nil
-	}
-	err = yaml.Unmarshal(buf, &c)
-	if err != nil {
-		log.Printf("[%s] Template format error. err: %v", c.path, err)
+	if !c.NodeOnly() {
+		_, err := os.Stat(c.path)
+		if err != nil && os.IsNotExist(err) {
+			log.Printf("[%s] template doesn't exist. err: %v", c.path, err)
+			return nil
+		}
+		buf, err := os.ReadFile(c.path)
+		if err != nil {
+			log.Printf("[%s] template open the failure. err: %v", c.path, err)
+			return nil
+		}
+		err = yaml.Unmarshal(buf, &c)
+		if err != nil {
+			log.Printf("[%s] Template format error. err: %v", c.path, err)
+		}
 	}
 
 	var proxiesName []string
 	names := map[string]int{}
 
 	for _, proto := range c.rawProxies {
-
 		proxy := make(map[string]any)
-		j, _ := json.Marshal(proto)
-		_ = json.Unmarshal(j, &proxy)
+		p, ok := proto.(map[string]any)
+		if ok {
+			proxy = p
+		} else {
+			j, err := json.Marshal(proto)
+			if err != nil {
+				log.Printf("json marshal error: %v", err)
+				continue
+			}
+			_ = json.Unmarshal(j, &proxy)
+		}
 
 		var name string
 		switch reflect.TypeOf(proto).Kind() {
@@ -81,7 +91,18 @@ func (c *Clash) LoadTemplate() []byte {
 
 	}
 
-	d, err := yaml.Marshal(c)
+	var yamlOut any = c
+	if c.NodeOnly() {
+		type nodeOnly struct {
+			Proxies []map[string]any `yaml:"proxies"`
+		}
+
+		yamlOut = nodeOnly{
+			Proxies: c.Proxies,
+		}
+	}
+
+	d, err := yaml.Marshal(yamlOut)
 	if err != nil {
 		return nil
 	}
@@ -89,10 +110,15 @@ func (c *Clash) LoadTemplate() []byte {
 	return d
 }
 
-func GenerateClashConfig(proxies []any) ([]byte, error) {
+func (c *Clash) NodeOnly() bool {
+	return c.nodeOnly
+}
+
+func GenerateClashConfig(proxies []any, nodeOnly bool) ([]byte, error) {
 	clash := Clash{
 		path:       acl.GlobalGen.OutputFile,
 		rawProxies: proxies,
+		nodeOnly:   nodeOnly,
 	}
 
 	r := clash.LoadTemplate()

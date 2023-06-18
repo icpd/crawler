@@ -16,7 +16,7 @@ const (
 	File
 )
 
-func Config(sourceType SourceType, source string) (string, error) {
+func Config(sourceType SourceType, source string, nodeOnly bool) (string, error) {
 	var contents []string
 	var err error
 
@@ -39,7 +39,7 @@ func Config(sourceType SourceType, source string) (string, error) {
 	}
 
 	proxies := subscribe.ParseProxy(contents)
-	config, err := subscribe.GenerateClashConfig(proxies)
+	config, err := subscribe.GenerateClashConfig(proxies, nodeOnly)
 	if err != nil {
 		return "", err
 	}
