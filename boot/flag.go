@@ -20,6 +20,7 @@ func init() {
 	flag.StringVar(&req.Proxy, "proxy", "", "http代理")
 	flag.IntVar(&global.Tick, "t", 6, "规则更新频率（小时）")
 	flag.BoolVar(&global.Version, "version", false, "查看版本信息")
+	flag.BoolVar(&global.NodeOnly, "nodeonly", false, "只生成节点信息")
 	flag.StringVar(&global.SourceLinks, "link", "", "订阅链接")
 	flag.StringVar(&global.SourceFile, "file", "", "订阅文件")
 	flag.Parse()

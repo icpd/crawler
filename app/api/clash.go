@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/icpd/subscribe2clash/internal/clash"
+	"github.com/spf13/cast"
 )
 
 const key = "link"
@@ -23,7 +24,8 @@ func (cc *ClashController) Clash(c *gin.Context) {
 		return
 	}
 
-	config, err := clash.Config(clash.Url, links)
+	nodeOnly, _ := c.GetQuery("nodeonly")
+	config, err := clash.Config(clash.Url, links, cast.ToBool(nodeOnly))
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		c.Abort()

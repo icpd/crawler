@@ -47,11 +47,15 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 
 # 通过订阅链接
 ./subscribe2clash --link=subscribe_link -o=output_file
+
+# 只输出节点信息
+./subscribe2clash --link=subscribe_link -o=output_file  --nodeonly
 ```
 
 
 ### web服务
 启动一个 HTTP 服务，访问 http://localhost:8162/?link=你的订阅链接 即可获取 Clash 配置。
+只输出节点信息 http://localhost:8162/?nodeonly=1&link=你的订阅链接
 ```bash
 ./subscribe2clash
 ```
@@ -94,7 +98,6 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ./subscribe2clash -t 6
   ```
 
-  
 
 
 

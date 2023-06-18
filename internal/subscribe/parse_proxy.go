@@ -36,7 +36,7 @@ func ParseProxy(contentSlice []string) []any {
 		// try unmarshal clash config
 		var c Clash
 		if err := yaml.Unmarshal([]byte(v), &c); err == nil {
-			for _, pg := range c.ProxyGroups {
+			for _, pg := range c.Proxies {
 				proxies = append(proxies, pg)
 			}
 			continue

@@ -119,6 +119,7 @@ type Clash struct {
 
 	path       string
 	rawProxies []any
+	nodeOnly   bool
 }
 
 type Trojan struct {
