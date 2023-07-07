@@ -28,6 +28,8 @@ services:
   clashurl:
     image: baoniu/clashurl:latest
     restart: unless-stopped
+    environment:
+      - APP_KEY=${APP_KEY}
     expose:
       - 8162
     networks:

@@ -3,8 +3,9 @@ package api
 import (
 	"errors"
 	"fmt"
-	"github.com/icpd/subscribe2clash/internal/crypto"
 	"github.com/icpd/subscribe2clash/internal/xbase64"
+	"github.com/wumansgy/goEncrypt/aes"
+	"log"
 	"net/http"
 	"strings"
 
@@ -54,46 +55,42 @@ func (cc *ClashController) Clash(c *gin.Context) {
 }
 
 func (cc *ClashController) Txt(c *gin.Context) {
-	value, exists := c.GetQuery(v)
-	if !exists || len(value) == 0 {
+	data, exists := c.GetQuery(v)
+	if !exists || len(data) == 0 {
 		c.String(http.StatusBadRequest, v+" 不能为空")
 		c.Abort()
 		return
 	}
-	if strings.HasPrefix(value, password) {
-		decodeStr, err := xbase64.Base64DecodeStripped(subProtocolBody(value, password))
+	if strings.HasPrefix(data, password) {
+		data = subProtocolBody(data, password)
+		dataByte, err := aes.AesCbcDecryptByHex(data, []byte(EasKey), nil)
 		if err != nil {
-			c.String(http.StatusBadRequest, err.Error())
+			log.Printf("decode fail,%v\n", err.Error())
+			c.String(http.StatusBadRequest, "decode failed.")
 			c.Abort()
 			return
 		}
-
-		value, err = crypto.Decrypt(EasKey, string(decodeStr))
-		if err != nil {
-			c.String(http.StatusBadRequest, err.Error())
-			c.Abort()
-			return
-		}
+		data = string(dataByte)
 	}
 
 	switch {
-	case strings.HasPrefix(value, ssrHeader):
-		tmp, err := ssrGenerate(subProtocolBody(value, ssrHeader))
+	case strings.HasPrefix(data, ssrHeader):
+		tmp, err := ssrGenerate(subProtocolBody(data, ssrHeader))
 		if err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 			c.Abort()
 			return
 		}
-		value = tmp
+		data = tmp
 
-	case strings.HasPrefix(value, ssHeader):
-		tmp, err := ssGenerate(subProtocolBody(value, ssHeader))
+	case strings.HasPrefix(data, ssHeader):
+		tmp, err := ssGenerate(subProtocolBody(data, ssHeader))
 		if err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 			c.Abort()
 			return
 		}
-		value = tmp
+		data = tmp
 
 	default:
 		c.String(http.StatusBadRequest, v+"前缀格式不支持")
@@ -107,7 +104,7 @@ func (cc *ClashController) Txt(c *gin.Context) {
 	}
 
 	nodeOnly, _ := c.GetQuery("nodeonly")
-	config, err := clash.Config(clash.Txt, value, cast.ToBool(nodeOnly))
+	config, err := clash.Config(clash.Txt, data, cast.ToBool(nodeOnly))
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		c.Abort()
@@ -174,21 +171,6 @@ func ssrGenerate(value string) (string, error) {
 	return value, nil
 }
 
-func (cc *ClashController) Base64(c *gin.Context) {
-	data, exists := c.GetQuery(key)
-	if !exists {
-		c.String(http.StatusBadRequest, key+"不能为空，本接口对ss连接进行base64加密\n"+
-			"参考文档：https://github.com/hoochanlon/fq-book/blob/master/docs/append/srvurl.md\n"+
-			"ss://method:password@server:port\n"+
-			"ssr://ip:port:protocol:method:blending:password")
-		c.Abort()
-		return
-	}
-	ssLink := "ss://" + xbase64.Base64EncodeStripped(data)
-
-	c.String(http.StatusOK, ssLink)
-}
-
 func (cc *ClashController) GenerateUrl(c *gin.Context) {
 	// 获取表单参数
 	linkType := strings.ToLower(c.PostForm("linkType"))
@@ -221,13 +203,11 @@ func (cc *ClashController) GenerateUrl(c *gin.Context) {
 		c.String(http.StatusOK, "不支持")
 		return
 	}
-	data, err := crypto.Encrypt(EasKey, data)
+	data, err := aes.AesCbcEncryptHex([]byte(data), []byte(EasKey), nil)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
-	data = xbase64.Base64EncodeStripped(data)
-
 	proto := c.Request.Header.Get("X-Forwarded-Proto")
 	if proto == "" {
 		if c.Request.TLS != nil {
