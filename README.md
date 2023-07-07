@@ -32,7 +32,7 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 2、将.env.default 重命名为 .env 并填写域名和ss密码及加密方式，域名不填则不支持https
 
 3、docker-compose -f docker-compose.yml up -d
->>> 不需要gpt可以把gpt配置删掉
+> 若不需要gpt，可以将yml中的gpt部分删掉
 
 4、访问https://域名:8162/build 生成连接
 
