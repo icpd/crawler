@@ -26,15 +26,6 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 在原版基础上扩展了配置单个ss服务器的功能
 新增页面：https://域名:8162/build 根据单个 ss/ssr 信息生成calsh配置
 
-## docker 一键集成caddy+ss+subscribe2clash方案
-1、进入docker 目录
-
-2、将.env.default 重命名为 .env 并填写域名和ss密码及加密方式，域名不填则不支持https
-
-3、docker-compose -f docker-compose-caddy+ss+sub2clash.yml up -d
-
-4、访问https://域名:8162/build 生成连接
-
 ## 启动服务
 
 ### 二进制
@@ -51,6 +42,16 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 - 执行 `make build`
 
 ## 使用
+
+### docker 一键集成caddy+ss+subscribe2clash方案
+1、进入docker 目录
+
+2、将.env.default 重命名为 .env 并填写域名和ss密码及加密方式，域名不填则不支持https
+
+3、docker-compose -f docker-compose.yml up -d
+> 若不需要gpt，可以将yml中的gpt部分删掉
+
+4、访问https://域名:8162/build 生成连接
 
 ### 命令行
 通过命令生成 Clash 配置，方便在脚本中使用。
