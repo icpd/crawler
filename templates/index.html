@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>加密连接生成</title>
+</head>
+
+<body>
+<h1>填写信息</h1>
+<form action="/generate-url" method="POST">
+    <label for="linkType">类型:</label>
+    <select id="linkType" name="linkType">
+        <option value="ss">ss</option>
+        <option value="ssr">ssr</option>
+    </select>
+    <br><br>
+
+    <label for="name">节点名称:</label>
+    <input type="text" id="name" name="name"><br><br>
+
+    <label for="ip">Ip:</label>
+    <input type="text" id="ip" name="ip"><br><br>
+
+    <label for="port">Port:</label>
+    <input type="text" id="port" name="port"><br><br>
+
+    <label for="me">加密方法</label>
+    <input type="text" id="me" name="method"><br><br>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password"><br><br>
+
+    <label for="protocol">Protocol(ssr填写)</label>
+    <input type="text" id="protocol" name="protocol"><br><br>
+
+    <label for="blending">Blending(ssr填写)</label>
+    <input type="text" id="blending" name="blending"><br><br>
+
+    <input type="submit" value="生成加密连接">
+</form>
+</body>
+
+</html>

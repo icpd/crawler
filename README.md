@@ -22,6 +22,19 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 
 支持多订阅一起转换，多个订阅连接用英文逗号隔开。
 
+### 改动点
+在原版基础上扩展了配置单个ss服务器的功能
+新增页面：https://域名:8162/build 根据单个 ss/ssr 信息生成calsh配置
+
+## docker 一键集成caddy+ss+subscribe2clash方案
+1、进入docker 目录
+
+2、将.env.default 重命名为 .env 并填写域名和ss密码及加密方式，域名不填则不支持https
+
+3、docker-compose -f docker-compose-caddy+ss+sub2clash.yml up -d
+
+4、访问https://域名:8162/build 生成连接
+
 ## 启动服务
 
 ### 二进制
@@ -54,8 +67,10 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 
 
 ### web服务
-启动一个 HTTP 服务，访问 http://localhost:8162/?link=你的订阅链接 即可获取 Clash 配置。
-只输出节点信息 http://localhost:8162/?nodeonly=1&link=你的订阅链接
+启动一个 HTTP 服务，访问 http://localhost:8162/clash?link=你的订阅链接 即可获取 Clash 配置。
+
+访问 http://localhost:8162/build 生成单个 Clash 配置连接
+
 ```bash
 ./subscribe2clash
 ```
@@ -97,7 +112,3 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ```
   ./subscribe2clash -t 6
   ```
-
-
-
-

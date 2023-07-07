@@ -37,3 +37,7 @@ func Base64DecodeStripped(s string) ([]byte, error) {
 	}
 	return decoded, err
 }
+
+func Base64EncodeStripped(str string) string {
+	return base64.StdEncoding.EncodeToString([]byte(str))
+}
