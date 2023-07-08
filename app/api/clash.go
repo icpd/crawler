@@ -7,6 +7,7 @@ import (
 	"github.com/wumansgy/goEncrypt/aes"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -191,13 +192,20 @@ func (cc *ClashController) GenerateUrl(c *gin.Context) {
 		return
 	}
 
-	data := ""
+	data, linkStr := "", ""
 	switch {
 	case linkType == "ss":
-		data = fmt.Sprintf("ss://%v:%v:%v:%v:%v", ip, port, method, pwd, name)
+		data = fmt.Sprintf("%v:%v:%v:%v:%v", ip, port, method, pwd, name)
+		linkStr = fmt.Sprintf("%v%v",
+			ssHeader, xbase64.Base64EncodeStripped(fmt.Sprintf("%v:%v@%v:%v", method, pwd, ip, port)))
+		data = fmt.Sprintf("%v%v", ssHeader, data)
 
 	case linkType == "ssr":
-		data = fmt.Sprintf("ssr://%v:%v:%v:%v:%v:%v:%v", ip, port, protocol, method, blending, pwd, name)
+		data = fmt.Sprintf("%v:%v:%v:%v:%v:%v:%v", ip, port, protocol, method, blending, pwd, name)
+		linkStr = fmt.Sprintf("%v%v", ssrHeader,
+			xbase64.Base64EncodeStripped(fmt.Sprintf("%v:%v:%v:%v:%v:%v/?remarks=%v",
+				ip, port, protocol, method, blending, pwd, xbase64.Base64EncodeStripped(name))))
+		data = fmt.Sprintf("%v%v", ssrHeader, data)
 
 	default:
 		c.String(http.StatusOK, "不支持")
@@ -217,15 +225,18 @@ func (cc *ClashController) GenerateUrl(c *gin.Context) {
 		}
 	}
 
-	decodeUrl := fmt.Sprintf("%v://%v:%v/txt?v=pwd://%v",
+	log.Println(c.Request.Host)
+	log.Println(c.Request.URL.Port())
+
+	decodeUrl := fmt.Sprintf("%v://%v/txt?v=%v",
 		proto,
 		c.Request.Host,
-		c.Request.URL.Port(),
-		data,
+		url.PathEscape("pwd://"+data),
 	)
 
 	// 加密
 	c.HTML(http.StatusOK, "link.html", gin.H{
-		"url": decodeUrl,
+		"url":  decodeUrl,
+		"link": linkStr,
 	})
 }

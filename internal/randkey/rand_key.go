@@ -1,15 +1,19 @@
 package randkey
 
 import (
-	"crypto/rand"
-	"encoding/hex"
+	"math/rand"
+	"time"
 )
 
-func RandomKey() string {
-	key := make([]byte, 16)
-	_, err := rand.Read(key)
-	if err != nil {
-		return ""
+var (
+	charSet               = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+)
+
+func GenerateRandomString(length int) string {
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charSet[seededRand.Intn(len(charSet))]
 	}
-	return hex.EncodeToString(key)
+	return string(b)
 }
