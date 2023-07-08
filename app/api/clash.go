@@ -99,11 +99,6 @@ func (cc *ClashController) Txt(c *gin.Context) {
 		return
 	}
 
-	_, exists = c.GetQuery("ssTxt")
-	if exists {
-
-	}
-
 	nodeOnly, _ := c.GetQuery("nodeonly")
 	config, err := clash.Config(clash.Txt, data, cast.ToBool(nodeOnly))
 	if err != nil {
