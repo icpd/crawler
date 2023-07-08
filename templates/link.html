@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>订阅连接</title>
+</head>
+<link href="https://cdn.bootcdn.net/ajax/libs/spectre.css/0.5.9/spectre.min.css" rel="stylesheet">
+<style>
+    .qr img{
+        border: #ccc 1px dashed;
+    }
+</style>
+<body>
+<div class="column col-9 col-sm-12">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="clash">clash订阅连接</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <textarea class="form-input" id="clash" placeholder="Textarea" rows="3">{{.url}}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-9 col-sm-12 col-ml-auto">
+                <button class="btn btn-primary input-group-btn" data-clipboard-target="#clash">复制内容</button>
+                <a href="{{.url}}" class="btn btn-success input-group-btn" target="_blank">跳转</a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-9 col-sm-12 col-ml-auto qr" id="clash-qrcode"></div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="link">协议订阅连接</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <textarea class="form-input" id="link" placeholder="Textarea" rows="3">{{.link}}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-9 col-sm-12 col-ml-auto">
+                <button class="btn btn-primary input-group-btn" data-clipboard-target="#link">复制内容</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-9 col-sm-12 col-ml-auto  qr" id="link-qrcode"></div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+    function clickQrcode(id, target) {
+        const qr = qrcode(0, 'H');
+        qr.addData(document.getElementById(id).value);
+        qr.make();
+        document.getElementById(target).innerHTML = qr.createImgTag();
+    }
+
+    window.onload = function () {
+        clickQrcode("link", "link-qrcode");
+        clickQrcode("clash", "clash-qrcode");
+    }
+    document.getElementById("link").addEventListener("input", function () {
+        clickQrcode("link", "link-qrcode");
+    })
+    document.getElementById("clash").addEventListener("input", function () {
+        clickQrcode("clash", "clash-qrcode");
+    })
+
+    const clipboard = new ClipboardJS('.btn');
+    clipboard.on('success', function (e) {
+        console.info('Action:', e.action);
+        console.info('Text:', e.text);
+        console.info('Trigger:', e.trigger);
+    });
+    clipboard.on('error', function (e) {
+        console.error('Action:', e.action);
+        console.error('Trigger:', e.trigger);
+    });
+</script>
+</body>
+</html>

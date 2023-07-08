@@ -54,10 +54,38 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 
 
 ### web服务
-启动一个 HTTP 服务，访问 http://localhost:8162/?link=你的订阅链接 即可获取 Clash 配置。
-只输出节点信息 http://localhost:8162/?nodeonly=1&link=你的订阅链接
+启动一个 HTTP 服务，访问 http://localhost:8162/clash?link=你的订阅链接 即可获取 Clash 配置。
+只输出节点信息 http://localhost:8162/clash?nodeonly=1&link=你的订阅链接
+
 ```bash
 ./subscribe2clash
+```
+
+### docker 方式部署
+#### 将代码打包成docker镜像
+```docker
+docker build -f Dockerfile -t subscribe2clash:latest .
+```
+#### 一键docker部署 ss + subscribe2clash + caddy
+> 通过同时部署多个服务，最大化利用单个节点
+> 
+> docker一键配置 同时提供ss服务和订阅连接生成服务
+> 
+> 通过caddy 自动申请https证书 防止配置信息泄漏
+
+- 进入docker目录
+- 将.env.default 重命名为 .env 并修改域名(填写域名并将域名指向你的服务器会自动申请https证书) 和 ss密码等信息
+- 执行 docker-compose -f docker-compose.yml up -d 启动服务
+- 访问 http://localhost:8162/build 填写ss配置信息（.env中的配置,ss服务默认端口8388） 生成 clash订阅连接
+- 在客户端上加载订阅连接
+
+<img src="QQ20230708-111213.png" width="300px">
+<br>
+<img src="QQ20230708-111126.png" width="300px">
+
+#### 项目docker编译方式
+```
+docker build -f Dockerfile -t clashurl:v1 .
 ```
 
 ## 其它
@@ -97,7 +125,3 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
   ```
   ./subscribe2clash -t 6
   ```
-
-
-
-

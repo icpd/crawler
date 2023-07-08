@@ -18,6 +18,7 @@ func initHttpServer() {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+
 	router.RegisterRouter(r)
 
 	srv := &http.Server{
@@ -41,6 +42,7 @@ func initHttpServer() {
 		close(closed)
 	}()
 
+	log.Println("服务地址 -> http://localhost:8162")
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("listen: %v\n", err)
 	}

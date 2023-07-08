@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>配置生成</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/spectre.css/0.5.9/spectre.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="column col-9 col-sm-12">
+    <form class="form-horizontal" action="/generate-url" method="post">
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="linkType">节点类型</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <select class="form-select" name="linkType" id="linkType">
+                    <option value="ss">ss://</option>
+                    <option value="ssr">ssr://</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="input-example-4">节点名称</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <input class="form-input" name="name" id="input-example-4" type="text" placeholder="美国-xx云">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="input-example-5">Ip地址</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <input class="form-input" id="input-example-5" name="ip" placeholder="8.8.8.8">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="input-example-6">端口</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <input class="form-input" id="input-example-6" name="port" placeholder="8388">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="input-example-7">加密方法</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <input class="form-input" id="input-example-7" name="method" placeholder="aes-256-gcm">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="input-example-8">密码</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <input class="form-input" id="input-example-8" type="password" name="password" placeholder="如：NIUFwu873T*Y&fuwji">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="input-example-9">Protocol(ssr填写)</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <input class="form-input" id="input-example-9" name="protocol" placeholder="origin">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="input-example-10">Blending(ssr填写)</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <input class="form-input" id="input-example-10" name="blending" placeholder="plain">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-9 col-sm-12 col-ml-auto">
+                <input type="submit" class="btn btn-primary input-group-btn btn-lg" value="生成订阅连接">
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
