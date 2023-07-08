@@ -1,0 +1,7 @@
+{$DOMAIN_NAME}:8443 {
+  reverse_proxy chatgpt:3000
+}
+
+{$DOMAIN_NAME}:8162 {
+  reverse_proxy clashurl:8162
+}
