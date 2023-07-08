@@ -23,8 +23,8 @@ const (
 
 var (
 	//ssReg      = regexp.MustCompile(`(?m)ss://(\w+)@([^:]+):(\d+)\?plugin=([^;]+);\w+=(\w+)(?:;obfs-host=)?([^#]+)?#(.+)`)
-	ssReg2 = regexp.MustCompile(`(?m)ss://([\-0-9a-z]+):(.+)@(.+):(\d+)(.+)?#(.+)`)
-	ssReg  = regexp.MustCompile(`(?m)ss://([/+=\w]+)(@.+)?#(.+)`)
+	ssReg2 = regexp.MustCompile(`(?m)([\-0-9a-z]+):(.+)@(.+):(\d+)(.+)?#(.+)`)
+	ssReg  = regexp.MustCompile(`(?m)([^@]+)(@.+)?#?(.+)?`)
 
 	trojanReg  = regexp.MustCompile(`(?m)^trojan://(.+)@(.+):(\d+)\?allowInsecure=\d&peer=(.+)#(.+)`)
 	trojanReg2 = regexp.MustCompile(`(?m)^trojan://(.+)@(.+):(\d+)#(.+)$`)
@@ -233,6 +233,7 @@ func ssrConf(s string) ClashRSSR {
 		return ClashRSSR{}
 	}
 	params := strings.Split(string(rawSSRConfig), `:`)
+
 	if len(params) != 6 {
 		return ClashRSSR{}
 	}
@@ -256,6 +257,7 @@ func ssrConf(s string) ClashRSSR {
 			ssr.Type = "ss"
 		}
 	}
+
 	suffix := strings.Split(params[SSRSuffix], "/?")
 	if len(suffix) != 2 {
 		return ClashRSSR{}
@@ -291,7 +293,6 @@ func ssrConf(s string) ClashRSSR {
 			continue
 		}
 	}
-
 	return ssr
 }
 

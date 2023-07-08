@@ -3,6 +3,7 @@ package clash
 import (
 	"errors"
 	"os"
+	"strings"
 	"unsafe"
 
 	"github.com/icpd/subscribe2clash/internal/subscribe"
@@ -14,6 +15,7 @@ type SourceType int
 const (
 	Url SourceType = iota
 	File
+	Txt
 )
 
 func Config(sourceType SourceType, source string, nodeOnly bool) (string, error) {
@@ -32,8 +34,11 @@ func Config(sourceType SourceType, source string, nodeOnly bool) (string, error)
 		if err != nil {
 			return "", err
 		}
-
 		contents = append(contents, subscribe.ParseRawProxies(unsafe.String(&file[0], len(file))))
+
+	case Txt:
+		contents = append(contents, strings.Split(source, ",")...)
+
 	default:
 		return "", errors.New("unknown source type")
 	}
