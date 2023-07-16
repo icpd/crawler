@@ -2,7 +2,9 @@ package subscribe
 
 import (
 	"encoding/base64"
+	"fmt"
 	"log"
+	"net/url"
 	"strings"
 	"unsafe"
 
@@ -11,6 +13,13 @@ import (
 )
 
 func GetRawProxiesFromLinks(links string) ([]string, error) {
+	// url decode
+	links, err := url.QueryUnescape(links)
+	if err != nil {
+		log.Printf("Warning: url decode %s 失败, err:%v", links, err)
+		return nil, fmt.Errorf("url decode %s 失败, err:%w", links, err)
+	}
+
 	subLinks := strings.Split(links, ",")
 
 	var rawProxiesSlice []string

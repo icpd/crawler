@@ -20,7 +20,7 @@ Clash配置转换，默认自动获取[ACL4SSR](https://github.com/ACL4SSR/ACL4S
 
 支持v2ray\trojan\ss\ssr\ssd订阅转换。**暂不支持单节点转换**  
 
-支持多订阅一起转换，多个订阅连接用英文逗号隔开。
+支持多订阅一起转换，多个订阅连接用英文逗号隔开，链接建议用[URLEncode](https://www.urlencoder.org/)处理。
 
 ## 启动服务
 
