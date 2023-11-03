@@ -1,0 +1,40 @@
+<html>
+
+<body>
+    <h1>模拟相亲网站使用方法</h1>
+    <p>
+        本模拟相亲网站可针对性响应原本发到第三方网站的请求。<br>
+        原本发送到类似http://www.zhenai.com/...的请求在本服务器/mock/www.zhanai.com/...被响应。<br>
+        响应的数据可被本课程原针对zhenai.com的爬虫爬取。
+    </p>
+    <p>
+        <li>例：http://www.zhenai.com/zhenghun/aomen --> http://localhost:8080/mock/www.zhenai.com/zhenghun/aomen</li>
+        <li>例：http://album.zhenai.com/u/9166010045394758737-->
+            http://localhost:8080/mock/album.zhenai.com/u/9166010045394758737</li>
+    </p>
+    <h2>
+        <span class="crawler-prompt">爬虫入口请设置为：</span>
+        <a class="crawler-start" href="/mock/www.zhenai.com/zhenghun"></a>
+    </h2>
+    <p>
+        当然不要忘了我们在<a href="https://git.imooc.com/coding-180/coding-180/src/master/crawler/main.go#L28">main.go</a>
+        中配置正确的Parser。
+    </p>
+    <p>在视频中我们会从 http://www.zhenai.com/zhenghun 这个地址入手去分析对方网站的结构，采用本模拟网站时，我们只需相应的访问 <a class="crawler-start"
+            href="/mock/www.zhenai.com/zhenghun"></a> 即可。</p>
+    <p>
+        不过视频中我们对于抓取数据的URL的验证过于严格。原本我们会采用正则表达式匹配http://www.zhenai.com/...等，现在需要放宽限制，只需匹配www.zhenai.com等特征串即可，不是必须要http://<br>
+        即把视频正则表达式中类似 http://album.zhenai.com/u/[0-9]+ 改为 .*album\.zhenai\.com/u/[0-9]+<br>
+        我将在后面的章节中详细讲述有关正则表达式，在讲到时作相应的修改便可。<br>
+        具体修改请参考
+        <a
+            href="https://git.imooc.com/coding-180/coding-180/commit/1c9e644e901c6c84de99ad20c14e73c45abc06ec">https://git.imooc.com/coding-180/coding-180/commit/1c9e644e901c6c84de99ad20c14e73c45abc06ec</a>
+    </p>
+    <script lang="text/javascript">
+        Array.from(document.getElementsByClassName('crawler-start')).forEach(a => {
+            a.text = a.href;
+        });
+    </script>
+</body>
+
+</html>

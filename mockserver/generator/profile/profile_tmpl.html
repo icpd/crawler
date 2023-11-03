@@ -1,0 +1,329 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html">
+    <title>{{.Name}}的资料</title>
+    <link rel="stylesheet" href="/static/css/blog.css">
+</head>
+<body class="skinWrap">
+
+
+    <section class="header">
+        <div class="pure-g">
+            <div class="pure-u-1-5">
+                <img style="profile-photo" src="{{.PhotoURL}}">
+            </div>
+            <dl class="pure-u-3-5">
+                <dt class="ceiling-dt lh20">
+                    <h1 class="ceiling-name ib fl fs24 lh32 blue">{{.Name}}</h1>
+                    <p class="ceiling-age fs14 lh22 c5e">{{.Age}}岁，{{.Height}}cm，{{.Income}}</p>
+                </dt>
+                <dd class="ceiling-dd">
+                    <a class="btnR2 mr10 sendMailBtn" href="javascript:;">发邮件</a>
+
+
+
+                    <a class="btnP2 mr10 salutationBtn" href="javascript:;">打招呼</a>
+
+
+
+
+                    <a class="btnP2 mr10 askBtn" href="javascript:;">问问题</a>
+
+
+
+
+
+                </dd>
+            </dl>
+        </div>
+    </section>
+
+
+    <div class="content">
+
+        <span class="to-buy-skin" id="toBuySkin">
+            <a target="_blank" onclick="ajaxStat(1653,1,1,0);"
+                href="http://profile.zhenai.com/v2/profile/index?skinEntity=1" class="corner" rel="nofollow"></a>
+            <a href="javascript:;" class="close" onclick="this.parentNode.style.display = 'none'"></a>
+        </span>
+
+        <div class="skin-header">
+            <div class="frameW posr">
+                <em class="d-item item-1"></em>
+                <em class="d-item item-2"></em>
+                <em class="d-item item-3"></em>
+                <em class="d-item item-4"></em>
+                <em class="d-item item-5"></em>
+                <em class="d-item item-6"></em>
+                <em class="d-item item-7"></em>
+                <em class="d-item item-8"></em>
+                <em class="d-item item-9"></em>
+                <em class="d-item item-10"></em>
+
+
+            </div>
+        </div>
+        <div class="skin-body">
+            <article class="myhome-wrap frameW clearfix">
+                <!-- 个人信息简介 -->
+                <h2 class="content-subhead">个人信息简介</h2>
+                <section class="mod-brief-info bgff radius-3 bord">
+
+                    <div class="brief-center p20">
+                        <table class="pure-table">
+                            <tr>
+                                <td><span class="label">年龄：</span>{{.Age}}岁</td>
+                                <td><span class="label">身高：</span>{{.Height}}CM</td>
+                                <td><span class="label">月收入：</span>{{.Income}}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="label">婚况：</span>{{.Marriage}}</td>
+                                <td><span class="label">学历：</span>{{.Education}}</td>
+                                <td><span class="label"></span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="label">职业： </span>{{.Occupation}}</td>
+                                <td><span class="label">籍贯：</span>{{.Hokou}}</td>
+                                <td><span class="label"></span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="brief-bottom">
+                        <div class="brief-group p40">
+
+
+                            <a class="btnR2 mr10 sendMailBtn" href="javascript:;">发邮件</a>
+
+
+                            <a class="btnP2 mr10 salutationBtn" href="javascript:;">打招呼</a>
+
+
+
+
+                            <a class="btnP2 mr10 askBtn" href="javascript:;">问问题</a>
+
+
+
+
+
+                            <a class="btnP2 mr10 contactBtn" href="javascript:;">委托红娘</a>
+
+
+                        </div>
+
+                        <div class="icon-group">
+
+                            <a id="attention" href="javascript:;" class="tp-icon tp-icon-watch">关注</a>
+                            <a id="gift" href="javascript:;" class="tp-icon tp-icon-gift">送礼物</a>
+
+                            <a id="chat" href="javascript:;" class="tp-icon tp-icon-chat">在线聊天</a>
+                            <a id="identityInfo" style="display:none" href="javascript:;"
+                                class="tp-icon tp-icon-identity">身份证信息</a>
+                            <a id="intelligence" href="javascript:;" class="tp-icon tp-icon-news"> 情敌动态</a>
+                            <!--  <a id= "zhenXinOnline" href = "javascript:;" class = "tp-icon tp-icon-online">上线提醒 </a> -->
+                            <a id="complaint" href="javascript:;" class="tp-icon tp-icon-report">举报/拉黑</a>
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 个人信息详情 -->
+                <h2 class="content-subhead">个人信息详情</h2>
+                <section class="row">
+                    <!-- 展示个人信息 -->
+                    <section class="pure-u-3-5">
+                        <div class="mod-tab-info" id="infoTab">
+                            <ul class="info-title clearfix info-btn-js">
+                                <li class="fl selected"><a href="javascript:;">内心独白</a><b class="line"></b></li>
+                                <li class="fl"><a href="javascript:;">自我描述</a><b class="line"></b></li>
+                            </ul>
+                            <div class="info-content">
+                                <div class="info-item slider info-inner">
+
+                                    <div class="info-op">
+                                        <a href="javascript:;" class="tp-icon tp-icon-praise fr praiseBtn"
+                                            praiseType="1">赞一下</a>
+                                        <a href="javascript:;" class="arrow luffing slider-js"></a>
+                                    </div>
+
+                                </div>
+                                <div class="info-item slider info-describe hide">
+
+                                    <div class="info-text">
+                                        <p class="fs14 lh20 c5e slider-area-js">想要听听TA对自己的想法？来<a href="javascript:;"
+                                                field="describe">邀请TA补充自我描述</a>吧<span class="info-mark"></span></p>
+
+                                    </div>
+                                    <div class="info-op">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-floor floor-data posr clearfix">
+
+                            <h2 class="content-subhead">详细资料</h2>
+
+                            <div>
+                                <table class="pure-table">
+                                    <tr>
+                                        <td><span class="label">性别：</span><span field="">{{.Gender}}</span></td>
+                                        <td><span class="label">生肖：</span><span field="">--</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="label">身高：</span><span field="">{{.Height}}CM</span></td>
+                                        <td><span class="label">星座：</span><span field="">{{.Xinzuo}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="label">体重：</span><span field="">{{.Weight}}KG</span></td>
+                                        <td><span class="label">血型：</span><span field="">--</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="label">体型：</span><span field="">--</span></td>
+                                        <td><span class="label">职业：</span><span field="">{{.Occupation}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="label">公司：</span><span field="">--</span></td>
+                                        <td><span class="label"></span><span field=""></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="label">信仰：</span><span field="">--</span></td>
+                                        <td><span class="label"></span><span field=""></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="info-floor floor-life posr clearfix">
+
+                            <h2 class="content-subhead">生活状况</h2>
+                            <div class="floor-content">
+                                <table class="pure-table">
+                                    <tr>
+                                        <td><span class="label">住房条件：</span><span field="">{{.House}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="label">是否购车：</span><span field="">{{.Car}}</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="info-floor floor-hobby posr clearfix">
+                            <h2 class="content-subhead">兴趣爱好</h2>
+                            <div class="floor-content">
+                                <table class="pure-table">
+                                    <tr>
+                                        <td class="ml5font"><span class="label">喜欢的活动：</span><span field=""
+                                                class="value">--</span></td>
+                                        <td class="ml5font"><span class="label">喜欢的食物：</span><span field=""
+                                                class="value">--</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ml7font"><span class="label">喜欢的体育运动：</span><span field=""
+                                                class="value">--</span></td>
+                                        <td class="ml5font"><span class="label">喜欢的地方：</span><span field=""
+                                                class="value">--</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ml5font"><span class="label">喜欢的音乐：</span><span field=""
+                                                class="value">--</span></td>
+                                        <td class="ml5font"><span class="label">喜欢的宠物：</span><span field=""
+                                                class="value">--</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="ml7font"><span class="label">喜欢的影视节目：</span><span field=""
+                                                class="value">--</span></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+
+
+                        <div class="info-floor floor-term posr clearfix">
+
+                            <div class="floor-photo fl tac">
+                                <b class="floor-icon floor-icon-term"></b>
+                                <p class="fs16 c5e lh32">择偶条件 </p>
+                            </div>
+                            <div class="floor-content">
+                                <table class="floor-table">
+                                    <tr>
+                                        <td><span class="label">体型：</span><span field="">不限</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="complete-data fs14 tac">
+                                <a href="javascript:;" field="percent">TA的资料完整度只有55%，邀请完善资料</a>
+
+                            </div>
+
+                        </div>
+                    </section>
+                    <!-- 右侧栏 -->
+                    <aside class="pure-u-1-5">
+                        <!-- 收到礼物 -->
+                        <div style="display:none" class="receive-gift mb10 bgff radius-3 bord">
+                            <div class="info-title">
+                                <span class="c33 bgff">Ta收到的礼物 </span><span class="c9e bgff">(<span id="giftNum"
+                                        class="red bgff">15</span>个)</span>
+                            </div>
+                            <div class="gift-area posr gift-roll-js">
+                                <div class="gift-list-box posa clearfix ">
+                                </div>
+                            </div>
+                            <div class="gift-btn tar">
+                                <a href="javascript:;" class="gift-btn-left disable"></a>
+                                <a href="javascript:;" class="gift-btn-right"></a>
+                            </div>
+                        </div>
+
+                        <!-- 珍爱币和珍心会员 -->
+
+
+                        <!-- 线下和珍爱通 -->
+
+
+
+
+                        <!-- 猜你喜欢 -->
+
+                        <div class="guess-like mb10 bgff radius-3 bord">
+                            <div class="info-title clearfix">
+                                <a href="javascript:;" class="fr bgff nextGroup">换一组</a>
+                                <span class="pr10 c33 bgff">猜你喜欢</span>
+                            </div>
+                            <div class="pure-g">
+                                <ul class="guess-list">
+                                    {{range .GuessList}}
+                                    <li class="clearfix">
+                                        <dl class="guess-info">
+                                            <dt class="row">
+                                                <div class="pure-u-1-3"><img class="guess-photo" src={{.PhotoURL}}></div>
+                                                <div class="pure-u-2-3">
+                                                <a class="exp-user-name" target="_blank"
+                                                    href="{{.URL}}">{{.Name}}</a>
+                                                </div>
+                                            </dt>
+                                        </dl>
+                                    </li>
+                                    {{end}}
+                                </ul>
+                            </div>
+                        </div>
+                    </aside>
+                </section>
+            </article>
+        </div>
+        <div class="skin-footer">
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>

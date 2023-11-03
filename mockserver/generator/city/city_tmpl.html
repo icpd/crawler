@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>城市用户列表</title>
+    <link rel="stylesheet" href="/static/css/blog.css">
+</head>
+
+<body>
+
+<div id="layout" class="pure-g">
+
+        <div class="content pure-u-1 pure-u-md-3-4">
+            <div>
+                <div class="posts">
+                    {{range .Items}}
+                    <section class="post">
+                            <header class="post-header">
+                                <h2 class="post-title"><a href="{{.URL}}">{{.Profile.Name}}</a></h2>
+        
+                                <p class="post-meta">
+                                    ID: {{.ID}}
+                                </p>
+                            </header>
+        
+                            <div class="post-description">
+                                <div class="row">
+                                    <div class="pure-u-1-5">
+                                        <img class="city-photo" src="{{.Profile.PhotoURL}}">
+                                    </div>
+                                    <div class="pure-u-3-5">
+                                        {{with .Profile}}
+                                        <div class="row">
+                                            <div class="pure-u-1-5">{{.Age}}岁</div>
+                                            <div class="pure-u-1-5">{{.Gender}}</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="pure-u-1-5">{{.Income}}</div>
+                                            <div class="pure-u-1-5">{{.House}}</div>
+                                            <div class="pure-u-1-5">{{.Car}}</div>
+                                        </div>
+                                        {{end}}
+                                        <div class="row">
+                                            <div><a href="">打招呼</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+ 
+                            </div>
+                    </section>
+                    {{end}}
+
+                </div>
+    
+                <div class="footer">
+                    <div class="row">
+                        {{range .Pages}}
+                        {{if .URL}}
+                        <span class="pager"><a href="{{.URL}}">{{.Page}}</a></span>
+                        {{else}}
+                        <span class="pager">{{.Page}}</span>
+                        {{end}}
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
