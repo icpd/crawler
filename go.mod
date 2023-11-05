@@ -12,7 +12,7 @@ require (
 	github.com/olivere/elastic/v7 v7.0.8
 	github.com/ugorji/go v1.1.7 // indirect
 	go.uber.org/zap v1.12.0
-	golang.org/x/net v0.0.0-20220722155237-a158d28d115b
-	golang.org/x/text v0.3.8
+	golang.org/x/net v0.17.0
+	golang.org/x/text v0.13.0
 	gopkg.in/yaml.v2 v2.2.4 // indirect
 )
